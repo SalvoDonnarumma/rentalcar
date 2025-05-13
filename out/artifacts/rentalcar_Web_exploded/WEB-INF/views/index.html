@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/head :: headFragment"></head>
+
+<body>
+
+<!-- navbar -->
+<div th:replace="common/navbar :: navbarFragment"></div>
+
+<!-- jumbotron -->
+<div th:replace="common/jumbotron :: jumbotronFragment"></div>
+
+<h1 style="text-align: center; margin: 0 auto; display: block; color: red; padding-bottom: 1em;"
+    th:text="${intestazione}">Titolo placeholder</h1>
+
+<h3 style="text-align: center; margin: 0 auto; display: block; color: green;"
+    th:text="${saluti}">Saluti placeholder</h3>
+
+<!-- footer -->
+<div th:replace="common/foot :: footFragment"></div>
+
+</body>
+</html>

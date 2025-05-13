@@ -1,0 +1,14 @@
+<!-- JumboTron -->
+<div class="jumbotron jumbotron-billboard" th:fragment="jumbotronFragment">
+    <div class="img"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 th:text="${Titolo}">Titolo di default</h2>
+                <p th:text="${SottoTitolo}">Sottotitolo di default</p>
+                <a th:href="@{/login}" class="btn btn-primary btn-lg">Accedi</a>
+                <a th:href="@{/signup}" id="SignIn" class="btn btn-success btn-lg">Registrati</a>
+            </div>
+        </div>
+    </div>
+</div>
