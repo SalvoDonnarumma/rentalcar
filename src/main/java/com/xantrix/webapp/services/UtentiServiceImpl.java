@@ -1,20 +1,46 @@
 package com.xantrix.webapp.services;
 
+import com.xantrix.webapp.dtos.UtenteDto;
 import com.xantrix.webapp.entities.Utente;
 import com.xantrix.webapp.repository.UtentiRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Service
 public class UtentiServiceImpl implements UtentiService {
 
+    @Autowired
     private UtentiRepository utentiRepository;
-
-    private UtentiServiceImpl(UtentiRepository utentiRepository) {
-        this.utentiRepository = utentiRepository;
-    }
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Override
-    public List<Utente> SelAll() {
-        return utentiRepository.findAll();
+    public List<UtenteDto> SelAll() {
+        List<Utente> utenti = utentiRepository.findAll();
+        System.out.println("Totale utenti: " + utenti.size());
+
+        return ConvertToDto(utenti);
+    }
+
+    private List<UtenteDto> ConvertToDto(List<Utente> utenti) {
+        List<UtenteDto> utentiDtoList = utenti
+                .stream()
+                .map(source -> modelMapper.map(source, UtenteDto.class))
+                .collect(Collectors.toList());
+
+        return utentiDtoList;
+    }
+
+    private UtenteDto ConvertToDto(Utente utente) {
+        UtenteDto utenteDto = null;
+        if(utente != null) {
+            utenteDto = modelMapper.map(utente, UtenteDto.class);
+        }
+        return utenteDto;
     }
 }
