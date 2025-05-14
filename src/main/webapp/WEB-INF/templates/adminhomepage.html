@@ -70,14 +70,10 @@
                         <td class="tbl-string" th:text="${#dates.format(user.dataNascita, 'dd/MM/yyyy')}"></td>
                         <td class="tbl-string" th:text="${user.ruolo}"></td>
 
-                        <td class="tbl-string infoBadge">
-                            <span class="badge rounded-pill text-bg-primary">Normale</span>
-                        </td>
-
-
                         <td class="text-end">
                             <a th:href="@{#}" class="btn btn-light text-danger">Elimina</a>
 
+                            <!-- DropDown Menu -->
                             <div class="dropdown">
                                 <a href="#" data-bs-toggle="dropdown" class="btn btn-light">
                                     <i class="material-icons md-more_horiz"></i>
@@ -85,9 +81,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="#">Dettaglio</a></li>
                                     <li><a class="dropdown-item" href="#">Visualizza prenotazioni</a></li>
-                                    <li>
-                                        <a class="dropdown-item" th:href="@{#}">Modifica</a>
-                                    </li>
+                                    <li><a class="dropdown-item" href="#">Modifica</a></li>
                                 </ul>
                             </div>
                         </td>

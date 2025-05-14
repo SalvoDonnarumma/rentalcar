@@ -43,7 +43,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         resolver.setSuffix(".html");
         resolver.setTemplateMode("HTML");
         resolver.setCharacterEncoding("UTF-8");
-        resolver.setCacheable(false);
+        resolver.setCacheable(true);
         return resolver;
     }
 
