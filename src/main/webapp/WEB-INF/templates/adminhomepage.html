@@ -25,17 +25,17 @@
         <header class="card-header">
             <div class="row gx-3">
                 <div class="col-lg-4 col-md-6 me-auto">
-                    <form class="form-inline my-2 my.lg-0" id="search" method="GET" th:action="@{/articoli/search}">
+                    <form class="form-inline my-2 my.lg-0" id="search" method="GET" th:action="@{/homepage/search}">
                         <input type="text" id="filtroInput" name="filtro" th:value="${filtro}" placeholder="Cerca..." class="form-control"/>
-                    </form>
-                </div>
 
-                <div class="col-lg-2 col-6 col-md-3">
-                    <select class="form-select">
-                        <option>Nome</option>
-                        <option>Cognome</option>
-                        <option>Data di nascita</option>
-                    </select>
+                        <select class="form-select mt-2" name="campoFiltro">
+                            <option value="nome">Nome</option>
+                            <option value="cognome">Cognome</option>
+                            <option value="dataNascita">Data di nascita</option>
+                        </select>
+
+                        <button type="submit" class="btn btn-primary mt-2">Cerca</button>
+                    </form>
                 </div>
 
                 <div class="col-lg-2 col-6 col-md-3">

@@ -4,7 +4,6 @@ import com.xantrix.webapp.dtos.PagingData;
 import com.xantrix.webapp.dtos.UtenteDto;
 import com.xantrix.webapp.services.UtentiService;
 import com.xantrix.webapp.utils.Paging;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -91,7 +90,7 @@ public class UtentiController {
          */
 
         int realPage = (pageNum > 0) ? pageNum - 1 : 0;
-        List<UtenteDto> utenti = utentiService.SearchCostumers(realPage, recForPage);
+        List<UtenteDto> utenti = utentiService.SearchCostumers(null, null, realPage, recForPage);
         numArt = utentiService.NumRecords();
 
         pages = paging.setPages(pageNum, numArt);
@@ -103,14 +102,15 @@ public class UtentiController {
         return "adminhomepage";
     }
 
-    /*
-    @GetMapping
-    public String SearchItem(
+    ///homepage/search?filtro=acqua&campoFiltro=nome
+    @GetMapping(value = "/search")
+    public String homepageSearch(
             @RequestParam(name = "filtro") String filtro,
+            @RequestParam(name = "campoFiltro") String campoFiltro,
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
-            Model model) {
+            Model model){
 
-        int page = 0;
+        int pageNum = 0;
         int recForPage = Integer.parseInt(selected);
 
         try{
@@ -119,23 +119,17 @@ public class UtentiController {
             recForPage = 10;
         }
 
-        List<UtentiDto> articoli = utentiService.SearchArticoli(filtro, pageNum, recForPage);
+        List<UtenteDto> utenti = utentiService.SearchCostumers(filtro, campoFiltro, pageNum, recForPage);
+        int numArt = utentiService.NumRecords();
+        boolean notFound = utenti.isEmpty();
 
-        int numArt = articoliService.NumRecords(filtro);
-        boolean notFound = articoli.isEmpty();
-
-        model.addAttribute("articoli", articoli);
+        model.addAttribute("utenti", utenti);
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("recPage", recForPage);
         model.addAttribute("filtro", filtro);
         model.addAttribute("pages", pages);
         model.addAttribute("notFound", notFound);
 
-        return "articoli";
-
-
+        return "adminhomepage";
     }
-    */
-
-
 }
