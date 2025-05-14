@@ -14,6 +14,9 @@ public class Paging {
 
         List<PagingData> pages = new ArrayList<>();
 
+        System.out.println("Numero di pagina: " + page);
+        System.out.println("Numero di records: " + numRecords);
+
         int recForPage = 10;
         int min = 1;
         int max = 5;
@@ -30,7 +33,7 @@ public class Paging {
 
         int maxPages = (int) Math.ceil((double)numRecords/recForPage);
 
-        for(int i = min; i < Math.min(max, maxPages); i++){
+        for(int i = min; i <= Math.min(max, maxPages); i++){
             boolean isSelected = (i == page);
             pages.add(new PagingData(i, isSelected));
         }

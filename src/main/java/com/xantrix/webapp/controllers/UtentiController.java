@@ -26,8 +26,9 @@ public class UtentiController {
 
     List<PagingData> pages = new ArrayList<>();
 
-    private UtentiController(UtentiService utentiService) {
+    private UtentiController(UtentiService utentiService, Paging paging) {
         this.utentiService = utentiService;
+        this.paging = paging;
     }
 
     @GetMapping
@@ -35,33 +36,13 @@ public class UtentiController {
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
             Model model) {
 
-
-        int pageNum = 0;
-        int recForPage = Integer.parseInt(selected);
-
-        try{
-            recForPage = Integer.parseInt(selected);
-        } catch (NumberFormatException e){
-            recForPage = 10;
-        }
-
-        List<UtenteDto> utenti = utentiService.SearchCostumers(pageNum, recForPage);
-
-        int numCos = utentiService.NumRecords();
-        boolean notFound = utenti.isEmpty();
-
-        model.addAttribute("utenti", utenti);
-        model.addAttribute("pageNum", pageNum);
-        model.addAttribute("recPage", recForPage);
-        model.addAttribute("pages", pages);
-        model.addAttribute("notFound", notFound);
-
-        return "adminhomepage";
+        return "redirect:/homepage/search/parametri;paging=0,0?selected=10";
     }
 
     ///homepage/search/parametri(paging=${pageNum}, offset=-1, selected=${recPage})}
+    //homepage/search/parametri;paging=2,0?selected=10
     @GetMapping(value="/search/{parametri}")
-    public String GetArticoliWithPar(
+    public String GetCostumersWithPar(
             @MatrixVariable(pathVar = "parametri") Map<String, List<String>> parametri,
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
             ModelMap model){
@@ -72,11 +53,16 @@ public class UtentiController {
 
         //PARAMETRI PAGING
         List<String> paramPaging = parametri.get("paging");
+        if(paramPaging == null)
+            System.out.println("paramPaging is null");
+
         if(paramPaging != null){
             try{
                 pageNum = Integer.parseInt(paramPaging.get(0)); //Numero della pagina
                 recForPage = Integer.parseInt(selected); //Record per pagina
                 diffPage = Integer.parseInt(paramPaging.get(1));
+
+                System.out.println("Numero della pagina catturato dalla view: "+pageNum);
 
                 if(pageNum >= 1)
                     pageNum+= diffPage;
@@ -88,6 +74,9 @@ public class UtentiController {
                 recForPage = 10;
             }
         }
+
+        System.out.println("Numero della pagina: "+pageNum);
+        System.out.println("DiffPage: "+diffPage);
 
         /*
         //PARAMETRI FILTRI AGGIUNTIVI
@@ -101,7 +90,8 @@ public class UtentiController {
         }
          */
 
-        List<UtenteDto> utenti =utentiService.SearchCostumers(pageNum, recForPage);
+        int realPage = (pageNum > 0) ? pageNum - 1 : 0;
+        List<UtenteDto> utenti = utentiService.SearchCostumers(realPage, recForPage);
         numArt = utentiService.NumRecords();
 
         pages = paging.setPages(pageNum, numArt);

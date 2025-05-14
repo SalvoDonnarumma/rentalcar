@@ -99,26 +99,35 @@
                     Utente/i NON presente/i in anagrafica!
                 </div>
 
-                <!--Blocco paginazione-->
+                <!-- Inizio Blocco Paginazione -->
                 <nav class="float-end mt-3" aria-label="Page navigation">
                     <ul class="pagination">
 
+                        <!-- Tasto Previous -->
                         <li class="page-item" th:classappend="${pageNum <= 1} ? 'disabled'">
-                            <a class="page-link" th:href="@{/homepage/search/parametri(paging=${pageNum}, offset=-1, selected=${recPage})}" aria-label="Previous">
+                            <a class="page-link"
+                               th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',-1?selected=' + ${recPage}}"
+                               aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Precedente</span>
                             </a>
                         </li>
 
-                        <li th:each="p : ${pages}" class="page-item" th:classappend="${p.selected} ? 'active'">
-                            <a class="page-link"
-                               th:href="@{/articoli/cerca/parametri(paging=${p.pageNum}, offset=0, filtro=${filtro}, selected=${recPage})}">
-                                <span th:text="${p.pageNum}"></span>
+                        <!-- Pagine numerate -->
+                        <li class="page-item"
+                            th:each="pagina : ${pages}"
+                            th:classappend="${pagina.selected} ? 'active'">
+                            <a  class="page-link"
+                                    th:href="@{'/homepage/search/parametri;paging=' + ${pagina.pageNum} + ',0?selected=' + ${recPage}}">
+                            <span th:text="${pagina.pageNum}">1</span>
                             </a>
                         </li>
 
+                        <!-- Tasto Next -->
                         <li class="page-item">
-                            <a class="page-link" th:href="@{/articoli/cerca/parametri(paging=${pageNum}, offset=1, filtro=${filtro}, selected=${recPage})}" aria-label="Next">
+                            <a class="page-link"
+                               th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',1?selected=' + ${recPage}}"
+                               aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Successivo</span>
                             </a>
@@ -126,6 +135,8 @@
 
                     </ul>
                 </nav>
+
+
             </div>
         </div>
     </div>
