@@ -5,6 +5,8 @@ import com.xantrix.webapp.entities.Utente;
 import com.xantrix.webapp.repository.UtentiRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -27,6 +29,24 @@ public class UtentiServiceImpl implements UtentiService {
         return ConvertToDto(utenti);
     }
 
+    @Override
+    public List<UtenteDto> SearchUtenti(String filtro, int pageNum, int recForPage) {
+        return List.of();
+    }
+
+    @Override
+    public List<UtenteDto> SearchCostumers(int pageNum, int recForPage) {
+        Pageable pageAndRecords = PageRequest.of(pageNum, recForPage);
+
+        return ConvertToDto(utentiRepository.findAll(pageAndRecords).getContent());
+    }
+
+    @Override
+    public int NumRecords() {
+        return (int) utentiRepository.count();
+    }
+
+
     private List<UtenteDto> ConvertToDto(List<Utente> utenti) {
         List<UtenteDto> utentiDtoList = utenti
                 .stream()
@@ -43,4 +63,6 @@ public class UtentiServiceImpl implements UtentiService {
         }
         return utenteDto;
     }
+
+
 }
