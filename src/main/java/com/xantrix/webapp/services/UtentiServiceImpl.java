@@ -43,10 +43,10 @@ public class UtentiServiceImpl implements UtentiService {
                 resultPage = utentiRepository.findByCognome(filtro, pageAndRecords);
             else if( campoFiltro.equalsIgnoreCase("email"))   //ricerca per email
                 resultPage = utentiRepository.findByEmailContainingIgnoreCase(filtro, pageAndRecords);
-                else if( campoFiltro.equalsIgnoreCase("dataNascita")) { //ricerca per anno
-                int anno = Integer.parseInt(filtro);
-                resultPage = utentiRepository.findByAnnoNascita(anno, pageAndRecords);
-            }
+                else { //ricerca per anno
+                    int anno = Integer.parseInt(filtro);
+                    resultPage = utentiRepository.findByAnnoNascita(anno, pageAndRecords);
+                }
         }
 
         List<Utente> utenti = resultPage.getContent();

@@ -9,11 +9,11 @@ public class VeicoloDto {
 
     private String targa;
 
-    private String anno_immatricolazione;
+    private String annoImmatricolazione;
 
     private String modello;
 
-    private String casa_produttrice;
+    private String casaProduttrice;
 
     private String tipologia;
 }

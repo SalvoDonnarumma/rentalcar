@@ -14,4 +14,11 @@ import java.util.function.Function;
 
 public interface VeicoliRepository extends JpaRepository<Veicolo, Integer> {
 
+    Page<Veicolo> findByTarga(String filtro, Pageable pageAndRecords);
+
+    Page<Veicolo> findByModello(String filtro, Pageable pageAndRecords);
+
+    Page<Veicolo> findByTipologia(String filtro, Pageable pageAndRecords);
+
+    Page<Veicolo> findByCasaProduttrice(String filtro, Pageable pageAndRecords);
 }

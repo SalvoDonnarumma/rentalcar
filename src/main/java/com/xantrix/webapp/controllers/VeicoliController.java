@@ -2,7 +2,8 @@ package com.xantrix.webapp.controllers;
 
 import com.xantrix.webapp.dtos.PagingData;
 import com.xantrix.webapp.dtos.UtenteDto;
-import com.xantrix.webapp.services.UtentiService;
+import com.xantrix.webapp.dtos.VeicoloDto;
+import com.xantrix.webapp.services.VeicoliService;
 import com.xantrix.webapp.utils.Paging;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,36 +18,36 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/homepage")
-public class UtentiController {
+@RequestMapping("/parcoauto")
+public class VeicoliController {
 
-    private UtentiService utentiService;
+    private VeicoliService veicoliService;
     private Paging paging;
 
     List<PagingData> pages = new ArrayList<>();
 
-    private UtentiController(UtentiService utentiService, Paging paging) {
-        this.utentiService = utentiService;
+    private VeicoliController(VeicoliService veicoliService, Paging paging) {
+        this.veicoliService = veicoliService;
         this.paging = paging;
     }
 
     @GetMapping
-    public String homepage(
+    public String parcoauto(
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
             Model model) {
 
-        return "redirect:/homepage/search/parametri;paging=0,0?selected=10";
+        return "redirect:/parcoauto/search/parametri;paging=0,0?selected=10";
     }
 
-    //http://localhost:8080/alphashop/articoli/cerca/parametri;paging=0,1?filtro=acqua&selected=10
+    //http://localhost:8080/alphashop/parcoauto/cerca/parametri;paging=0,1?filtro=acqua&selected=10
     @GetMapping(value="/search/{parametri}")
-    public String GetCostumersWithPar(
+    public String GetVeicoliWithPar(
             @MatrixVariable(pathVar = "parametri") Map<String, List<String>> parametri,
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
             @RequestParam(name = "filtro", required = false, defaultValue = "") String filtro,
             @RequestParam(name = "campoFiltro", required = false) String campoFiltro,
             ModelMap model){
-        int numCos = 0;
+        int numVec = 0;
         int pageNum = 0;
         int recForPage = 10;
         int diffPage = 0;
@@ -72,18 +73,20 @@ public class UtentiController {
         }
 
         int realPage = (pageNum > 0) ? pageNum - 1 : 0;
-        List<UtenteDto> utenti = utentiService.SearchCostumers(filtro, campoFiltro, realPage, recForPage);
-        numCos = utentiService.NumRecords();
+        List<VeicoloDto> veicoli = veicoliService.SearchVeicoli(filtro, campoFiltro, realPage, recForPage);
+        numVec = veicoliService.NumRecords();
 
-        pages = paging.setPages(pageNum, numCos);
-        model.addAttribute("utenti", utenti);
-        model.addAttribute("title", "HOMEPAGE ADMIN");
+        pages = paging.setPages(pageNum, numVec);
+        model.addAttribute("veicoli", veicoli);
+        model.addAttribute("title", "PARCO AUTO");
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("recPage", recForPage);
         model.addAttribute("pages", pages);
         model.addAttribute("filtro", filtro);
         model.addAttribute("campoFiltro", campoFiltro);
 
-        return "adminhomepage";
+        return "parcoauto";
     }
+
+
 }

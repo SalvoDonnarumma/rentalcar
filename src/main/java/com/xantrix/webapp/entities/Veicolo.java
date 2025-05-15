@@ -23,13 +23,13 @@ public class Veicolo {
     private String targa;
 
     @Column(name = "anno_immatricolazione")
-    private String anno_immatricolazione;
+    private String annoImmatricolazione;
 
     @Column(name = "modello")
     private String modello;
 
     @Column(name = "casa_produttrice")
-    private String casa_produttrice;
+    private String casaProduttrice;
 
     @Column(name = "tipologia")
     private String tipologia;
