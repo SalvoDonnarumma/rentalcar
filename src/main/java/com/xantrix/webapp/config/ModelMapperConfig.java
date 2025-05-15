@@ -1,7 +1,9 @@
 package com.xantrix.webapp.config;
 
 import com.xantrix.webapp.dtos.UtenteDto;
+import com.xantrix.webapp.dtos.VeicoloDto;
 import com.xantrix.webapp.entities.Utente;
+import com.xantrix.webapp.entities.Veicolo;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.modelmapper.spi.MappingContext;
@@ -18,6 +20,8 @@ public class ModelMapperConfig {
         modelMapper.getConfiguration().setSkipNullEnabled(true);
         modelMapper.addMappings(utenteMapping);
         modelMapper.addMappings(utenteDtoMapping);
+        modelMapper.addMappings(veicoloMapping);
+        modelMapper.addMappings(veicoloDtoMapping);
 
         return modelMapper;
     }
@@ -43,6 +47,29 @@ public class ModelMapperConfig {
             map().setPassword(source.getPassword());
         }
     };
+
+    PropertyMap<Veicolo, VeicoloDto> veicoloMapping = new PropertyMap<Veicolo, VeicoloDto>() {
+        protected void configure() {
+            map().setId(source.getIdVeicoli());
+            map().setTarga(source.getTarga());
+            map().setModello(source.getModello());
+            map().setTipologia(source.getTipologia());
+            map().setAnnoImmatricolazione(source.getAnnoImmatricolazione());
+            map().setCasaProduttrice(source.getCasaProduttrice());
+        }
+    };
+
+    PropertyMap<VeicoloDto, Veicolo> veicoloDtoMapping = new PropertyMap<VeicoloDto, Veicolo>() {
+        protected void configure() {
+            map().setIdVeicoli(source.getId());
+            map().setTarga(source.getTarga());
+            map().setModello(source.getModello());
+            map().setTipologia(source.getTipologia());
+            map().setAnnoImmatricolazione(source.getAnnoImmatricolazione());
+            map().setCasaProduttrice(source.getCasaProduttrice());
+        }
+    };
+
 
 
 }

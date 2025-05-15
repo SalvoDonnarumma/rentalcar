@@ -32,10 +32,23 @@ public class VeicoliServiceImpl implements VeicoliService {
     }
 
     @Override
-    public void DelVeicolo(String targa) {
+    public void DelVeicoloById(Integer id) {
+        veicoliRepository.deleteById(id);
+    }
+
+    @Override
+    public VeicoloDto SelByTarga(String targa) {
         Pageable pageAndRecords = PageRequest.of(0, 1);
-        Page<Veicolo> daCancellare = veicoliRepository.findByTarga(targa,pageAndRecords);
-        veicoliRepository.delete(daCancellare.getContent().get(0));
+        Veicolo veicolo = (veicoliRepository.findByTarga(targa,pageAndRecords).getContent().get(0));
+        return ConvertToDto(veicolo);
+    }
+
+    @Override
+    public void DelVeicoloByTarga(String targa) {
+        Veicolo daCancellare = ConvertFromDto(SelByTarga(targa));
+
+        System.out.println(daCancellare);
+        veicoliRepository.delete(daCancellare);
     }
 
     @Override

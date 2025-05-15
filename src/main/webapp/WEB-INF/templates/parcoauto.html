@@ -88,7 +88,7 @@
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="#">Dettaglio</a></li>
                   <li><a class="dropdown-item" href="#">Visualizza prenotazioni</a></li>
-                  <li><a class="dropdown-item" href="#">Modifica</a></li>
+                  <li><a class="dropdown-item" th:href="@{'/parcoauto/modifica/' + ${veicolo.getTarga()}}">Modifica</a></li>
                 </ul>
               </div>
             </td>

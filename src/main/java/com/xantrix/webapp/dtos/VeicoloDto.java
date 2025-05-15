@@ -7,6 +7,8 @@ import lombok.Setter;
 @Setter
 public class VeicoloDto {
 
+    private Integer id;
+
     private String targa;
 
     private String annoImmatricolazione;

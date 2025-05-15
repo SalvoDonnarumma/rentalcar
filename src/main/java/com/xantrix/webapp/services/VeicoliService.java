@@ -14,5 +14,9 @@ public interface VeicoliService {
 
     public void InsertVeicolo(VeicoloDto veicolo);
 
-    void DelVeicolo(String targa);
+    void DelVeicoloById(Integer id);
+
+    void DelVeicoloByTarga(String targa);
+
+    public VeicoloDto SelByTarga(String targa);
 }

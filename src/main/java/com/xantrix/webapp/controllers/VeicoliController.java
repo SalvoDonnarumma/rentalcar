@@ -105,6 +105,8 @@ public class VeicoliController {
             @ModelAttribute("dativec") VeicoloDto veicolo,
             BindingResult result){
 
+        if(veicolo.getId()!=null)
+            System.out.println("Veicolo da modificare: "+veicolo);
         veicoliService.InsertVeicolo(veicolo);
         return "redirect:/parcoauto/search/parametri;paging=0,0?filtro="+veicolo.getTarga()+"&campoFiltro=targa";
     }
@@ -113,15 +115,28 @@ public class VeicoliController {
     public String GetElimina(
             @PathVariable("targa") String targa,
             ModelMap model){
-
         try{
             if(!targa.isEmpty())
-                veicoliService.DelVeicolo(targa);
+                veicoliService.DelVeicoloByTarga(targa);
         } catch (Exception ex){
             throw new RuntimeException("Errore eliminazione veicolo",ex);
         }
 
         return "redirect:/parcoauto/search/parametri;paging=0,0?filtro="+targa+"&campoFiltro=targa";
+    }
+
+
+    @GetMapping(value = "/modifica/{targa}")
+    public String GetModificaPage(
+            Model model,
+            @PathVariable("targa") String targa){
+
+        VeicoloDto veicoloDto = veicoliService.SelByTarga(targa);
+
+        model.addAttribute("title", "MODIFICA VEICOLO");
+        model.addAttribute("dativec", veicoloDto);
+
+        return "gestveicoli";
     }
 
 }

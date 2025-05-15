@@ -9,7 +9,7 @@
 <section class="content-main" style="max-width: 760px">
   <h2 class="content-title" th:text="${title}">Gestione Veicoli</h2>
   <div class="content-header">
-    <a href="#" class="btn btn-outline-danger">× Annulla</a>
+    <a href="#" onclick="history.back()" class="btn btn-outline-danger">× Annulla</a>
   </div>
 
   <div class="card mb-4">
@@ -22,6 +22,10 @@
         </div>
 
         <div class="row gx-2">
+
+          <!-- Id Veicolo-->
+          <input type="hidden" th:field="*{id}" />
+
           <!-- Targa -->
           <fieldset class="col-sm-6 mb-3">
             <label for="targa" class="form-label">Targa:</label>
