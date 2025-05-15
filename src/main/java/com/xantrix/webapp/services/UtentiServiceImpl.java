@@ -10,11 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,19 +37,15 @@ public class UtentiServiceImpl implements UtentiService {
         if ( filtro == null || filtro.isEmpty() ) {
             resultPage = utentiRepository.findAll(pageAndRecords);
         } else {
-            if( campoFiltro.equalsIgnoreCase("nome"))
+            if( campoFiltro.equalsIgnoreCase("nome")) //ricerca per nome
                 resultPage = utentiRepository.findByNome(filtro, pageAndRecords);
-            else if( campoFiltro.equalsIgnoreCase("cognome"))
+            else if( campoFiltro.equalsIgnoreCase("cognome")) //ricerca per cognome
                 resultPage = utentiRepository.findByCognome(filtro, pageAndRecords);
-                else if( campoFiltro.equalsIgnoreCase("dataNascita")) {
-                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                try {
-                    Date data = formatter.parse(filtro);
-                    System.out.println("Data convertita: " + data);
-                    resultPage = utentiRepository.findByDataNascita(data, pageAndRecords);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            else if( campoFiltro.equalsIgnoreCase("email"))   //ricerca per email
+                resultPage = utentiRepository.findByEmailContainingIgnoreCase(filtro, pageAndRecords);
+                else if( campoFiltro.equalsIgnoreCase("dataNascita")) { //ricerca per anno
+                int anno = Integer.parseInt(filtro);
+                resultPage = utentiRepository.findByAnnoNascita(anno, pageAndRecords);
             }
         }
 
@@ -73,7 +64,6 @@ public class UtentiServiceImpl implements UtentiService {
     public int NumRecords() {
         return (int) utentiRepository.count();
     }
-
 
     private List<UtenteDto> ConvertToDto(List<Utente> utenti) {
         List<UtenteDto> utentiDtoList = utenti
