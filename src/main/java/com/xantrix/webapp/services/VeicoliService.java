@@ -11,4 +11,8 @@ public interface VeicoliService {
     List<VeicoloDto> SearchVeicoli(String filtro, String campoFiltro, int realPage, int recForPage);
 
     int NumRecords();
+
+    public void InsertVeicolo(VeicoloDto veicolo);
+
+    void DelVeicolo(String targa);
 }

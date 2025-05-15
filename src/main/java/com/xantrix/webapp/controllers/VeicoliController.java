@@ -8,10 +8,8 @@ import com.xantrix.webapp.utils.Paging;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.MatrixVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +30,7 @@ public class VeicoliController {
     }
 
     @GetMapping
-    public String parcoauto(
+    public String GetParcoAutoPage(
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
             Model model) {
 
@@ -51,6 +49,7 @@ public class VeicoliController {
         int pageNum = 0;
         int recForPage = 10;
         int diffPage = 0;
+        boolean notFound = true;
 
         //PARAMETRI PAGING
         List<String> paramPaging = parametri.get("paging");
@@ -76,8 +75,13 @@ public class VeicoliController {
         List<VeicoloDto> veicoli = veicoliService.SearchVeicoli(filtro, campoFiltro, realPage, recForPage);
         numVec = veicoliService.NumRecords();
 
+        if(!veicoli.isEmpty()){
+             notFound = false;
+        }
+
         pages = paging.setPages(pageNum, numVec);
         model.addAttribute("veicoli", veicoli);
+        model.addAttribute("notFound", notFound);
         model.addAttribute("title", "PARCO AUTO");
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("recPage", recForPage);
@@ -88,5 +92,36 @@ public class VeicoliController {
         return "parcoauto";
     }
 
+    @GetMapping(value = "/aggiungi")
+    public String GetGestVeicoliPage(Model model){
+        model.addAttribute("title", "AGGIUNTA VEICOLO");
+        model.addAttribute("dativec", new VeicoloDto());
+
+        return "gestveicoli";
+    }
+
+    @PostMapping(value = "/aggiungi")
+    public String GetInsVeicolo(
+            @ModelAttribute("dativec") VeicoloDto veicolo,
+            BindingResult result){
+
+        veicoliService.InsertVeicolo(veicolo);
+        return "redirect:/parcoauto/search/parametri;paging=0,0?filtro="+veicolo.getTarga()+"&campoFiltro=targa";
+    }
+
+    @GetMapping(value = "/elimina/{targa}")
+    public String GetElimina(
+            @PathVariable("targa") String targa,
+            ModelMap model){
+
+        try{
+            if(!targa.isEmpty())
+                veicoliService.DelVeicolo(targa);
+        } catch (Exception ex){
+            throw new RuntimeException("Errore eliminazione veicolo",ex);
+        }
+
+        return "redirect:/parcoauto/search/parametri;paging=0,0?filtro="+targa+"&campoFiltro=targa";
+    }
 
 }

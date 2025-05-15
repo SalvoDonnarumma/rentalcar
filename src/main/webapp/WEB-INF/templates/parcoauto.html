@@ -74,7 +74,11 @@
             <td class="tbl-string" th:text="${veicolo.tipologia}"></td>
 
             <td class="text-end">
-              <a th:href="@{#}" class="btn btn-light text-danger">Elimina</a>
+              <a th:href="@{'/parcoauto/elimina/' + ${veicolo.getTarga()}}"
+                 class="btn btn-light text-danger"
+                 onclick="return confirm('Sei sicuro di voler eliminare questo veicolo?');">
+                Elimina
+              </a>
 
               <!-- DropDown Menu -->
               <div class="dropdown">

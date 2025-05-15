@@ -50,6 +50,7 @@ public class UtentiController {
         int pageNum = 0;
         int recForPage = 10;
         int diffPage = 0;
+        boolean notFound = true;
 
         //PARAMETRI PAGING
         List<String> paramPaging = parametri.get("paging");
@@ -75,8 +76,13 @@ public class UtentiController {
         List<UtenteDto> utenti = utentiService.SearchCostumers(filtro, campoFiltro, realPage, recForPage);
         numCos = utentiService.NumRecords();
 
+        if(!utenti.isEmpty()){
+            notFound = false;
+        }
+
         pages = paging.setPages(pageNum, numCos);
         model.addAttribute("utenti", utenti);
+        model.addAttribute("notFound", notFound);
         model.addAttribute("title", "HOMEPAGE ADMIN");
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("recPage", recForPage);

@@ -21,4 +21,5 @@ public interface VeicoliRepository extends JpaRepository<Veicolo, Integer> {
     Page<Veicolo> findByTipologia(String filtro, Pageable pageAndRecords);
 
     Page<Veicolo> findByCasaProduttrice(String filtro, Pageable pageAndRecords);
+
 }

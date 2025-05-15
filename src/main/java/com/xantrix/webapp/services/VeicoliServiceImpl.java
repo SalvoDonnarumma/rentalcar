@@ -27,6 +27,18 @@ public class VeicoliServiceImpl implements VeicoliService {
     }
 
     @Override
+    public void InsertVeicolo(VeicoloDto veicoloDto) {
+        veicoliRepository.save(ConvertFromDto(veicoloDto));
+    }
+
+    @Override
+    public void DelVeicolo(String targa) {
+        Pageable pageAndRecords = PageRequest.of(0, 1);
+        Page<Veicolo> daCancellare = veicoliRepository.findByTarga(targa,pageAndRecords);
+        veicoliRepository.delete(daCancellare.getContent().get(0));
+    }
+
+    @Override
     public List<VeicoloDto> SelAll() {
         return ConvertToDto(veicoliRepository.findAll());
     }
@@ -68,6 +80,14 @@ public class VeicoliServiceImpl implements VeicoliService {
             veicoloDto = modelMapper.map(veicolo, VeicoloDto.class);
         }
         return veicoloDto;
+    }
+
+    private Veicolo ConvertFromDto(VeicoloDto veicoloDto) {
+        Veicolo veicolo = null;
+        if(veicoloDto != null) {
+            veicolo = modelMapper.map(veicoloDto, Veicolo.class);
+        }
+        return veicolo;
     }
 
 }
