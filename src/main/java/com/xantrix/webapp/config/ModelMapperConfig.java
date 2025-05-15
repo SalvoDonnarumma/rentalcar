@@ -28,6 +28,8 @@ public class ModelMapperConfig {
             map().setCognome(source.getCognome());
             map().setDataNascita(source.getDataNascita());
             map().setRuolo(source.getRuolo());
+            map().setEmail(source.getEmail());
+            map().setPassword(source.getPassword());
         }
     };
 
@@ -37,6 +39,8 @@ public class ModelMapperConfig {
             map().setCognome(source.getCognome());
             map().setDataNascita(source.getDataNascita());
             map().setRuolo(source.getRuolo());
+            map().setEmail(source.getEmail());
+            map().setPassword(source.getPassword());
         }
     };
 

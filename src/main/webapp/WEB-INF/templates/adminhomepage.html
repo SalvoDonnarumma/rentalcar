@@ -25,17 +25,18 @@
         <header class="card-header">
             <div class="row gx-3">
                 <div class="col-lg-4 col-md-6 me-auto">
-                    <form class="form-inline my-2 my.lg-0" id="search" method="GET" th:action="@{/articoli/search}">
+                    <form class="form-inline my-2 my.lg-0" id="search" method="GET" th:action="@{'/homepage/search/parametri;paging=0,0?selected=10&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}">
                         <input type="text" id="filtroInput" name="filtro" th:value="${filtro}" placeholder="Cerca..." class="form-control"/>
-                    </form>
-                </div>
 
-                <div class="col-lg-2 col-6 col-md-3">
-                    <select class="form-select">
-                        <option>Nome</option>
-                        <option>Cognome</option>
-                        <option>Data di nascita</option>
-                    </select>
+                        <select class="form-select mt-2" name="campoFiltro">
+                            <option value="nome">Nome</option>
+                            <option value="cognome">Cognome</option>
+                            <option value="email">Email</option>
+                            <option value="dataNascita">Anno di nascita</option>
+                        </select>
+
+                        <button type="submit" class="btn btn-primary mt-2">Cerca</button>
+                    </form>
                 </div>
 
                 <div class="col-lg-2 col-6 col-md-3">
@@ -58,6 +59,7 @@
                     <tr>
                         <th>Nome</th>
                         <th>Cognome</th>
+                        <th>Email</th>
                         <th>Data di nascita</th>
                         <th>Ruolo</th>
                         <th class="text-end">Azione</th>
@@ -67,6 +69,7 @@
                     <tr th:each="user : ${utenti}">
                         <td class="tbl-string" th:text="${user.nome}"></td>
                         <td class="tbl-string" th:text="${user.cognome}"></td>
+                        <td class="tbl-string" th:text="${user.email}"></td>
                         <td class="tbl-string" th:text="${#dates.format(user.dataNascita, 'dd/MM/yyyy')}"></td>
                         <td class="tbl-string" th:text="${user.ruolo}"></td>
 
@@ -100,7 +103,7 @@
                         <!-- Tasto Previous -->
                         <li class="page-item" th:classappend="${pageNum <= 1} ? 'disabled'">
                             <a class="page-link"
-                               th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',-1?selected=' + ${recPage}}"
+                               th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',-1?selected=' + ${recPage}+ '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}"
                                aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Precedente</span>
@@ -112,7 +115,7 @@
                             th:each="pagina : ${pages}"
                             th:classappend="${pagina.selected} ? 'active'">
                             <a  class="page-link"
-                                    th:href="@{'/homepage/search/parametri;paging=' + ${pagina.pageNum} + ',0?selected=' + ${recPage}}">
+                                    th:href="@{'/homepage/search/parametri;paging=' + ${pagina.pageNum} + ',0?selected=' + ${recPage} + '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}">
                             <span th:text="${pagina.pageNum}">1</span>
                             </a>
                         </li>
@@ -120,7 +123,7 @@
                         <!-- Tasto Next -->
                         <li class="page-item">
                             <a class="page-link"
-                               th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',1?selected=' + ${recPage}}"
+                               th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',1?selected=' + ${recPage}+ '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}"
                                aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Successivo</span>
@@ -129,7 +132,6 @@
 
                     </ul>
                 </nav>
-
 
             </div>
         </div>

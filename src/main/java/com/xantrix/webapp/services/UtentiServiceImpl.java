@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,15 +30,25 @@ public class UtentiServiceImpl implements UtentiService {
     }
 
     @Override
-    public List<UtenteDto> SearchUtenti(String filtro, int pageNum, int recForPage) {
-        return List.of();
-    }
-
-    @Override
-    public List<UtenteDto> SearchCostumers(int pageNum, int recForPage) {
+    public List<UtenteDto> SearchCostumers(String filtro, String campoFiltro, int pageNum, int recForPage) {
         Pageable pageAndRecords = PageRequest.of(pageNum, recForPage);
+        Page<Utente> resultPage = null;
 
-        Page<Utente> resultPage = utentiRepository.findAll(pageAndRecords);
+        if ( filtro == null || filtro.isEmpty() ) {
+            resultPage = utentiRepository.findAll(pageAndRecords);
+        } else {
+            if( campoFiltro.equalsIgnoreCase("nome")) //ricerca per nome
+                resultPage = utentiRepository.findByNome(filtro, pageAndRecords);
+            else if( campoFiltro.equalsIgnoreCase("cognome")) //ricerca per cognome
+                resultPage = utentiRepository.findByCognome(filtro, pageAndRecords);
+            else if( campoFiltro.equalsIgnoreCase("email"))   //ricerca per email
+                resultPage = utentiRepository.findByEmailContainingIgnoreCase(filtro, pageAndRecords);
+                else if( campoFiltro.equalsIgnoreCase("dataNascita")) { //ricerca per anno
+                int anno = Integer.parseInt(filtro);
+                resultPage = utentiRepository.findByAnnoNascita(anno, pageAndRecords);
+            }
+        }
+
         List<Utente> utenti = resultPage.getContent();
 
         System.out.println("--------- RISULTATI PAGINA ---------");
@@ -55,7 +64,6 @@ public class UtentiServiceImpl implements UtentiService {
     public int NumRecords() {
         return (int) utentiRepository.count();
     }
-
 
     private List<UtenteDto> ConvertToDto(List<Utente> utenti) {
         List<UtenteDto> utentiDtoList = utenti

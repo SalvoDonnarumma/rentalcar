@@ -27,6 +27,12 @@ public class Utente {
     @Column(name = "cognome")
     private String cognome;
 
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
     @Temporal(TemporalType.DATE)
     @Column(name = "data_nascita")
     //@NotNull(message = "{NotNull.Articoli.dataCreaz.Validation}")

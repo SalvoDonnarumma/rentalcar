@@ -4,7 +4,6 @@ import com.xantrix.webapp.dtos.PagingData;
 import com.xantrix.webapp.dtos.UtenteDto;
 import com.xantrix.webapp.services.UtentiService;
 import com.xantrix.webapp.utils.Paging;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -41,10 +40,13 @@ public class UtentiController {
 
     ///homepage/search/parametri(paging=${pageNum}, offset=-1, selected=${recPage})}
     //homepage/search/parametri;paging=2,0?selected=10
+    //http://localhost:8080/alphashop/articoli/cerca/parametri;paging=0,1?filtro=acqua&selected=10
     @GetMapping(value="/search/{parametri}")
     public String GetCostumersWithPar(
             @MatrixVariable(pathVar = "parametri") Map<String, List<String>> parametri,
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
+            @RequestParam(name = "filtro", required = false) String filtro,
+            @RequestParam(name = "campoFiltro", required = false) String campoFiltro,
             ModelMap model){
         int numArt = 0;
         int pageNum = 0;
@@ -53,16 +55,12 @@ public class UtentiController {
 
         //PARAMETRI PAGING
         List<String> paramPaging = parametri.get("paging");
-        if(paramPaging == null)
-            System.out.println("paramPaging is null");
 
         if(paramPaging != null){
             try{
                 pageNum = Integer.parseInt(paramPaging.get(0)); //Numero della pagina
                 recForPage = Integer.parseInt(selected); //Record per pagina
                 diffPage = Integer.parseInt(paramPaging.get(1));
-
-                System.out.println("Numero della pagina catturato dalla view: "+pageNum);
 
                 if(pageNum >= 1)
                     pageNum+= diffPage;
@@ -75,23 +73,8 @@ public class UtentiController {
             }
         }
 
-        System.out.println("Numero della pagina: "+pageNum);
-        System.out.println("DiffPage: "+diffPage);
-
-        /*
-        //PARAMETRI FILTRI AGGIUNTIVI
-        List<String> ExFilter = parametri.get("exFilter");
-        if(ExFilter != null){
-            try{
-                System.out.println(String.format("status: %s", ExFilter.get(0)));
-                System.out.println(String.format("categoria: %s", ExFilter.get(1)));
-            } catch (Exception e){
-            }
-        }
-         */
-
         int realPage = (pageNum > 0) ? pageNum - 1 : 0;
-        List<UtenteDto> utenti = utentiService.SearchCostumers(realPage, recForPage);
+        List<UtenteDto> utenti = utentiService.SearchCostumers(filtro, campoFiltro, realPage, recForPage);
         numArt = utentiService.NumRecords();
 
         pages = paging.setPages(pageNum, numArt);
@@ -99,43 +82,9 @@ public class UtentiController {
         model.addAttribute("pageNum", pageNum);
         model.addAttribute("recPage", recForPage);
         model.addAttribute("pages", pages);
+        model.addAttribute("filtro", filtro);
+        model.addAttribute("campoFiltro", campoFiltro);
 
         return "adminhomepage";
     }
-
-    /*
-    @GetMapping
-    public String SearchItem(
-            @RequestParam(name = "filtro") String filtro,
-            @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
-            Model model) {
-
-        int page = 0;
-        int recForPage = Integer.parseInt(selected);
-
-        try{
-            recForPage = Integer.parseInt(selected);
-        } catch (NumberFormatException e){
-            recForPage = 10;
-        }
-
-        List<UtentiDto> articoli = utentiService.SearchArticoli(filtro, pageNum, recForPage);
-
-        int numArt = articoliService.NumRecords(filtro);
-        boolean notFound = articoli.isEmpty();
-
-        model.addAttribute("articoli", articoli);
-        model.addAttribute("pageNum", pageNum);
-        model.addAttribute("recPage", recForPage);
-        model.addAttribute("filtro", filtro);
-        model.addAttribute("pages", pages);
-        model.addAttribute("notFound", notFound);
-
-        return "articoli";
-
-
-    }
-    */
-
-
 }
