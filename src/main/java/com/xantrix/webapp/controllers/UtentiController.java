@@ -7,10 +7,8 @@ import com.xantrix.webapp.utils.Paging;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.MatrixVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,5 +89,50 @@ public class UtentiController {
         model.addAttribute("campoFiltro", campoFiltro);
 
         return "adminhomepage";
+    }
+
+    @GetMapping(value = "/aggiungi")
+    public String AddCostumerPage(Model model) {
+        model.addAttribute("title", "AGGIUNTA COSTUMER");
+        model.addAttribute("datiutente", new UtenteDto());
+
+        return "gestutenti";
+    }
+
+    @PostMapping(value = "/aggiungi")
+    public String AddCostumer(
+            @ModelAttribute("datiutenti") UtenteDto utente,
+            BindingResult result){
+
+        utente.setRuolo("costumer");
+        System.out.println("Utente da inserire: "+utente);
+        utentiService.InsertCostumer(utente);
+        return "redirect:/homepage/search/parametri;paging=0,0?filtro="+utente.getEmail()+"&campoFiltro=email";
+    }
+
+    @GetMapping(value="/modifica/{id}")
+    public String ModificaCostumer(
+            Model model,
+            @PathVariable("id") Integer id){
+
+        UtenteDto utente = utentiService.SelById(id);
+        model.addAttribute("datiutente", utente);
+        model.addAttribute("title", "MODIFICA COSTUMER");
+
+        return "gestutenti";
+    }
+
+    @GetMapping(value = "/elimina/{id}")
+    public String DeleteCostumer(
+            @PathVariable("id") Integer id,
+            ModelMap model){
+
+        try{
+            utentiService.DeleteCostumer(id);
+        }catch(Exception e){
+            throw new RuntimeException("Errore eliminazione Costumer", e);
+        }
+
+        return "redirect:/homepage/search/parametri;paging=0,0?filtro="+id+"&campoFiltro=id";
     }
 }

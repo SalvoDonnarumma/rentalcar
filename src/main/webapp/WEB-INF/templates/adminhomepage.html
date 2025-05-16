@@ -14,7 +14,7 @@
     <div class="content-header">
         <h2 class="content-title">Lista Costumers</h2>
         <div>
-            <a th:href="@{/articoli/aggiungi}" class="btn btn-primary newart">
+            <a th:href="@{/homepage/aggiungi}" class="btn btn-primary newart">
                 <i class="material-icons md-plus"></i>
                 Nuovo
             </a>
@@ -74,7 +74,7 @@
                         <td class="tbl-string" th:text="${user.ruolo}"></td>
 
                         <td class="text-end">
-                            <a th:href="@{#}" class="btn btn-light text-danger">Elimina</a>
+                            <a th:href="@{'/homepage/elimina/'+${user.id}}" class="btn btn-light text-danger">Elimina</a>
 
                             <!-- DropDown Menu -->
                             <div class="dropdown">
@@ -84,7 +84,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="#">Dettaglio</a></li>
                                     <li><a class="dropdown-item" href="#">Visualizza prenotazioni</a></li>
-                                    <li><a class="dropdown-item" href="#">Modifica</a></li>
+                                    <li><a class="dropdown-item" th:href="@{'/homepage/modifica/'+${user.id}}">Modifica</a></li>
                                 </ul>
                             </div>
                         </td>

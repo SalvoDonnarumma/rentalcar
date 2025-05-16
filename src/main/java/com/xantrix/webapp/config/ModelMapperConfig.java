@@ -28,6 +28,7 @@ public class ModelMapperConfig {
 
     PropertyMap<Utente, UtenteDto> utenteMapping = new PropertyMap<Utente, UtenteDto>() {
         protected void configure() {
+            map().setId(source.getIdutente());
             map().setNome(source.getNome());
             map().setCognome(source.getCognome());
             map().setDataNascita(source.getDataNascita());
@@ -39,6 +40,7 @@ public class ModelMapperConfig {
 
     PropertyMap<UtenteDto, Utente> utenteDtoMapping = new PropertyMap<UtenteDto, Utente>() {
         protected void configure() {
+            map().setIdutente(source.getId());
             map().setNome(source.getNome());
             map().setCognome(source.getCognome());
             map().setDataNascita(source.getDataNascita());

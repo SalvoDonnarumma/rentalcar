@@ -6,11 +6,13 @@ import com.xantrix.webapp.repository.UtentiRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,35 +36,48 @@ public class UtentiServiceImpl implements UtentiService {
         Pageable pageAndRecords = PageRequest.of(pageNum, recForPage);
         Page<Utente> resultPage = null;
 
-        if ( filtro == null || filtro.isEmpty() ) {
+        if(filtro == null || filtro.isEmpty()) {
             resultPage = utentiRepository.findAll(pageAndRecords);
-        } else {
-            if( campoFiltro.equalsIgnoreCase("nome")) //ricerca per nome
+        } else if(campoFiltro.equalsIgnoreCase("id")){
+            Integer id = Integer.parseInt(filtro);
+            Optional<Utente> utente = utentiRepository.findById(id);
+            /*
+            if(utente.isPresent())
+                resultPage = new PageImpl<>(List.of(utente.get()), pageAndRecords, 1);
+            else
+                resultPage = new PageImpl<>(List.of(), pageAndRecords, 0); */
+
+            resultPage = utente.<Page<Utente>>map(value -> new PageImpl<>(List.of(value), pageAndRecords, 1)).orElseGet(() -> new PageImpl<>(List.of(), pageAndRecords, 0));
+        } else if(campoFiltro.equalsIgnoreCase("nome")) {
                 resultPage = utentiRepository.findByNome(filtro, pageAndRecords);
-            else if( campoFiltro.equalsIgnoreCase("cognome")) //ricerca per cognome
+            } else if(campoFiltro.equalsIgnoreCase("cognome")) {
                 resultPage = utentiRepository.findByCognome(filtro, pageAndRecords);
-            else if( campoFiltro.equalsIgnoreCase("email"))   //ricerca per email
-                resultPage = utentiRepository.findByEmailContainingIgnoreCase(filtro, pageAndRecords);
-                else { //ricerca per anno
-                    int anno = Integer.parseInt(filtro);
-                    resultPage = utentiRepository.findByAnnoNascita(anno, pageAndRecords);
-                }
-        }
+                } else
+                    resultPage = utentiRepository.findByEmailContainingIgnoreCase(filtro, pageAndRecords);
 
         List<Utente> utenti = resultPage.getContent();
-
-        System.out.println("--------- RISULTATI PAGINA ---------");
-        System.out.println("Numero pagina (zero-based): " + pageNum);
-        System.out.println("Numero risultati: " + utenti.size());
-        utenti.forEach(u -> System.out.println("Utente: " + u.getCognome() + " - ID: " + u.getIdutente()));
-        System.out.println("------------------------------------");
-
         return ConvertToDto(utenti);
     }
 
     @Override
     public int NumRecords() {
         return (int) utentiRepository.count();
+    }
+
+    @Override
+    public void InsertCostumer(UtenteDto utente) {
+        utentiRepository.save(ConvertFromDto(utente));
+    }
+
+    @Override
+    public void DeleteCostumer(Integer id) {
+        Optional<Utente> utente = utentiRepository.findById(id);
+        utentiRepository.delete(utente.get());
+    }
+
+    @Override
+    public UtenteDto SelById(Integer id) {
+        return ConvertToDto(utentiRepository.findById(id).get());
     }
 
     private List<UtenteDto> ConvertToDto(List<Utente> utenti) {
@@ -82,5 +97,11 @@ public class UtentiServiceImpl implements UtentiService {
         return utenteDto;
     }
 
-
+    private Utente ConvertFromDto(UtenteDto utenteDto) {
+        Utente utente = null;
+        if(utenteDto != null) {
+            utente = modelMapper.map(utenteDto, Utente.class);
+        }
+        return utente;
+    }
 }

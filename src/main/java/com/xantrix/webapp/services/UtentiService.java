@@ -11,4 +11,10 @@ public interface UtentiService {
     List<UtenteDto> SearchCostumers(String filtro, String campoFiltro, int pageNum, int recForPage);
 
     int NumRecords();
+
+    public void InsertCostumer(UtenteDto utente);
+
+    public void DeleteCostumer(Integer id);
+
+    public UtenteDto SelById(Integer id);
 }

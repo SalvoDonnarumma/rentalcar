@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="common/head :: head"></th:block>
+<body>
+
+<!-- Navbar -->
+<div th:replace="common/navbar :: navbarFragment"></div>
+
+<section class="content-main" style="max-width: 760px">
+  <h2 class="content-title" th:text="${title}">Gestione Utenti</h2>
+  <div class="content-header">
+    <a href="#" onclick="history.back()" class="btn btn-outline-danger">× Annulla</a>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <form th:action="@{/homepage/aggiungi}" th:object="${datiutente}" method="post">
+        <div th:if="${#fields.hasErrors()}" class="alert alert-danger">
+          <ul>
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+          </ul>
+        </div>
+
+        <div class="row gx-2">
+
+          <!-- Id Utente-->
+          <input type="hidden" th:field="*{id}" />
+
+          <!-- Nome -->
+          <fieldset class="col-sm-6 mb-3">
+            <label for="nome" class="form-label">Nome:</label>
+            <input type="text" id="nome" th:field="*{nome}" class="form-control" placeholder=""/>
+            <div class="text-danger" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+          </fieldset>
+
+          <!--Cognome -->
+          <fieldset class="col-sm-6 mb-3">
+            <label for="cognome" class="form-label">Cognome:</label>
+            <input type="text" id="cognome" th:field="*{cognome}" class="form-control" placeholder=""/>
+            <div class="text-danger" th:if="${#fields.hasErrors('cognome')}" th:errors="*{cognome}"></div>
+          </fieldset>
+
+          <!-- Data Nascita -->
+          <fieldset class="col-sm-6 mb-3">
+            <label for="dataNascita" class="form-label">Data di nascita:</label>
+            <input type="date" id="dataNascita" th:field="*{dataNascita}" class="form-control" placeholder=""/>
+            <div class="text-danger" th:if="${#fields.hasErrors('dataNascita')}" th:errors="*{dataNascita}"></div>
+          </fieldset>
+
+          <!-- Email -->
+          <fieldset class="col-sm-6 mb-3">
+            <label for="email" class="form-label">Email:</label>
+            <input type="email" id="email" th:field="*{email}" class="form-control" placeholder=""/>
+            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+          </fieldset>
+
+          <!-- Password -->
+          <fieldset class="col-sm-6 mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <input type="password" id="password" th:field="*{password}" class="form-control" placeholder=""/>
+            <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+          </fieldset>
+
+          <!-- Conferma Password -->
+          <fieldset class="col-sm-6 mb-3">
+            <label for="confPassword" class="form-label">Conferma Password:</label>
+            <input type="password" id="confPassword" th:field="*{password}" class="form-control" placeholder=""/>
+          </fieldset>
+
+        </div>
+        <br>
+        <input type="submit" id="btnAdd" class="btn btn-primary form-buttons" value="Salva"/>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div th:replace="common/foot :: footFragment"></div>
+</body>
+</html>
