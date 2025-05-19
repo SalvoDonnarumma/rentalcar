@@ -27,9 +27,9 @@ public class Prenotazione {
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "idutente_fk",  referencedColumnName = "idutente")
-    private Utente idUtente;
+    private Utente utente;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "idveicolo_fk",  referencedColumnName = "idVeicolo")
-    private Veicolo idVeicolo;
+    @JoinColumn(name = "idveicolo_fk",  referencedColumnName = "idveicolo")
+    private Veicolo veicolo;
 }

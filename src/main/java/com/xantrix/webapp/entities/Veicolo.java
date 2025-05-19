@@ -35,6 +35,10 @@ public class Veicolo {
     @Column(name = "tipologia")
     private String tipologia;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "idveicolo", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "veicolo", orphanRemoval = true)
     private Set<Prenotazione> prenotazioni = new HashSet<>();
+
+    public void addPrenotazione(Prenotazione prenotazione) {
+        prenotazioni.add(prenotazione);
+    }
 }

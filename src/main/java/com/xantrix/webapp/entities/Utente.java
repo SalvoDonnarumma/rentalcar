@@ -41,6 +41,10 @@ public class Utente {
     @Column(name = "ruolo")
     private String ruolo;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "idutente", orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "utente", orphanRemoval = true)
     private Set<Prenotazione> prenotazioni = new HashSet<>();
+
+    public void addPrenotazione(Prenotazione prenotazione) {
+        prenotazioni.add(prenotazione);
+    }
 }

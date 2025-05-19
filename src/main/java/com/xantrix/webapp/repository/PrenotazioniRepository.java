@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PrenotazioniRepository extends JpaRepository<Prenotazione, Integer> {
 
-    Page<Prenotazione> findByEmailContainingIgnoreCase(String email, Pageable pageable);
+    Page<Prenotazione> findByIdUtente(Integer idUtente, Pageable pageable);
     Page<Prenotazione> findByIdVeicolo(Integer idVeicolo, Pageable pageable);
     Page<Prenotazione> findByIdPrenotazione(Integer idPrenotazione, Pageable pageable);
 }
