@@ -25,5 +25,5 @@ public class UtenteDto {
     private String email;
     private String password;
 
-    private Set<PrenotazioneDto> prenotazioneDtoSet = new HashSet<>();
+    private Set<PrenotazioneDto> prenotazioni = new HashSet<>();
 }

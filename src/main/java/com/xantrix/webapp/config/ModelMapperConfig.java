@@ -1,7 +1,9 @@
 package com.xantrix.webapp.config;
 
+import com.xantrix.webapp.dtos.PrenotazioneDto;
 import com.xantrix.webapp.dtos.UtenteDto;
 import com.xantrix.webapp.dtos.VeicoloDto;
+import com.xantrix.webapp.entities.Prenotazione;
 import com.xantrix.webapp.entities.Utente;
 import com.xantrix.webapp.entities.Veicolo;
 import org.modelmapper.ModelMapper;
@@ -11,17 +13,47 @@ import org.modelmapper.Converter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Configuration
 public class ModelMapperConfig {
+    private final ModelMapper modelMapper = new ModelMapper();
+    private final Converter<Set<Prenotazione>, Set<PrenotazioneDto>> prenotazioniToDtoConverter =
+            ctx -> {
+                Set<Prenotazione> source = ctx.getSource();
+                if (source == null) {
+                    return Collections.emptySet();
+                }
+                return source.stream()
+                        .map(p -> modelMapper.map(p, PrenotazioneDto.class))
+                        .collect(Collectors.toCollection(HashSet::new)); // forza HashSet
+            };
+
+    private final Converter<Set<PrenotazioneDto>, Set<Prenotazione>> prenotazioniDtoToEntityConverter =
+            ctx -> {
+                Set<PrenotazioneDto> source = ctx.getSource();
+                if (source == null) {
+                    return Collections.emptySet();
+                }
+                return source.stream()
+                        .map(dto -> modelMapper.map(dto, Prenotazione.class))
+                        .collect(Collectors.toCollection(HashSet::new)); // forza HashSet
+            };
+
+
 
     @Bean
     public ModelMapper modelMapper() {
-        ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration().setSkipNullEnabled(true);
         modelMapper.addMappings(utenteMapping);
         modelMapper.addMappings(utenteDtoMapping);
         modelMapper.addMappings(veicoloMapping);
         modelMapper.addMappings(veicoloDtoMapping);
+        modelMapper.addMappings(prenotazioneMapping);
+        modelMapper.addMappings(prenotazioneDtoMapping);
 
         return modelMapper;
     }
@@ -35,6 +67,7 @@ public class ModelMapperConfig {
             map().setRuolo(source.getRuolo());
             map().setEmail(source.getEmail());
             map().setPassword(source.getPassword());
+        //    using(prenotazioniToDtoConverter).map(source.getPrenotazioni()).setPrenotazioni(null);
         }
     };
 
@@ -47,6 +80,7 @@ public class ModelMapperConfig {
             map().setRuolo(source.getRuolo());
             map().setEmail(source.getEmail());
             map().setPassword(source.getPassword());
+         //   using(prenotazioniDtoToEntityConverter).map(source.getPrenotazioni()).setPrenotazioni(null);
         }
     };
 
@@ -72,6 +106,22 @@ public class ModelMapperConfig {
         }
     };
 
+    PropertyMap<Prenotazione, PrenotazioneDto> prenotazioneMapping = new PropertyMap<Prenotazione, PrenotazioneDto>() {
+        protected void configure() {
+            map().setDataFine(source.getDataFine());
+            map().setDataInizio(source.getDataInizio());
+            map().setIdUtente(source.getUtente().getIdutente());
+            map().setIdVeicolo(source.getVeicolo().getIdVeicolo());
+        }
+    };
 
+    PropertyMap<PrenotazioneDto, Prenotazione> prenotazioneDtoMapping = new PropertyMap<PrenotazioneDto, Prenotazione>() {
+        protected void configure() {
+            map().setDataFine(source.getDataFine());
+            map().setDataInizio(source.getDataInizio());
+            map().getUtente().setIdutente(source.getIdUtente());
+            map().getVeicolo().setIdVeicolo(source.getIdVeicolo());
+        }
+    };
 
 }

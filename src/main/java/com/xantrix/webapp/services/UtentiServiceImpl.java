@@ -77,7 +77,8 @@ public class UtentiServiceImpl implements UtentiService {
 
     @Override
     public UtenteDto SelById(Integer id) {
-        return ConvertToDto(utentiRepository.findById(id).get());
+        Utente utente = utentiRepository.findById(id).get();
+        return ConvertToDto(utente);
     }
 
     private List<UtenteDto> ConvertToDto(List<Utente> utenti) {

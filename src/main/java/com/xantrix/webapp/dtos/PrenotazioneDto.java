@@ -9,7 +9,6 @@ import java.util.Date;
 
 @Getter
 @Setter
-@ToString
 public class PrenotazioneDto {
 
     private Integer idPrenotazione;
@@ -18,6 +17,18 @@ public class PrenotazioneDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dataFine;
 
+    private Integer idUtente;
+    private Integer idVeicolo;
+
     private UtenteDto utente;
     private VeicoloDto veicolo;
+
+    @Override
+    public String toString() {
+        return "Prenotazione{" +
+                "id=" + idPrenotazione +
+                ", utenteId=" + (utente != null ? utente.getId() : "null") +
+                ", veicoloId=" + (veicolo != null ? veicolo.getId() : "null") +
+                '}';
+    }
 }

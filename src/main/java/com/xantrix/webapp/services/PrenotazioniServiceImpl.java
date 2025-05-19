@@ -6,6 +6,8 @@ import com.xantrix.webapp.entities.Utente;
 import com.xantrix.webapp.repository.PrenotazioniRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,18 +22,25 @@ public class PrenotazioniServiceImpl implements PrenotazioniService {
     private ModelMapper modelMapper;
 
     @Override
-    public PrenotazioneDto getPrenotazioneById(Integer id) {
-        return null;
+    public PrenotazioneDto SelById(Integer id) {
+        PrenotazioneDto prenotazioneDto = null;
+        Pageable pageAndRecords = PageRequest.of(0, 1);
+        if(id != null) {
+            prenotazioneDto = ConvertToDto(prenotazioniRepository.findByIdPrenotazione(id, pageAndRecords).getContent().get(0));
+        }
+        return prenotazioneDto;
     }
 
     @Override
-    public List<PrenotazioneDto> GetPrenotazioniByEmail(String filtro, int pageNum, int recForPage) {
-        return List.of();
+    public List<PrenotazioneDto> SelByIdUtente(Integer idUtente, int pageNum, int recForPage) {
+        Pageable pageAndRecords = PageRequest.of(pageNum, recForPage);
+        return ConvertToDto(prenotazioniRepository.findByUtente(idUtente, pageAndRecords).getContent());
     }
 
     @Override
-    public List<PrenotazioneDto> GetPrenotazioniByIdVeicolo(String filtro, int pageNum, int recForPage) {
-        return List.of();
+    public List<PrenotazioneDto> SelByIdVeicolo(Integer idVeicolo, int pageNum, int recForPage) {
+        Pageable pageAndRecords = PageRequest.of(pageNum, recForPage);
+        return ConvertToDto(prenotazioniRepository.findByVeicolo(idVeicolo, pageAndRecords).getContent());
     }
 
     private List<PrenotazioneDto> ConvertToDto(List<Prenotazione> prenotazioni) {

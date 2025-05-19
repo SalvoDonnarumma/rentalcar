@@ -44,6 +44,13 @@ public class VeicoliServiceImpl implements VeicoliService {
     }
 
     @Override
+    public VeicoloDto SelById(Integer id) {
+        Pageable pageAndRecords = PageRequest.of(0, 1);
+        Veicolo veicolo = (veicoliRepository.findById(id).get());
+        return ConvertToDto(veicolo);
+    }
+
+    @Override
     public void DelVeicoloByTarga(String targa) {
         Veicolo daCancellare = ConvertFromDto(SelByTarga(targa));
 

@@ -19,4 +19,6 @@ public interface VeicoliService {
     void DelVeicoloByTarga(String targa);
 
     public VeicoloDto SelByTarga(String targa);
+
+    public VeicoloDto SelById(Integer id);
 }

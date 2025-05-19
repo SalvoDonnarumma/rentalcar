@@ -11,7 +11,6 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Prenotazione {
 
     @Id
@@ -32,4 +31,15 @@ public class Prenotazione {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "idveicolo_fk",  referencedColumnName = "idveicolo")
     private Veicolo veicolo;
+
+    // Prenotazione.java
+    @Override
+    public String toString() {
+        return "Prenotazione{" +
+                "id=" + idPrenotazione +
+                ", utenteId=" + (utente != null ? utente.getIdutente() : "null") +
+                ", veicoloId=" + (veicolo != null ? veicolo.getIdVeicolo() : "null") +
+                '}';
+    }
+
 }
