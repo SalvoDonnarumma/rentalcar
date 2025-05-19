@@ -52,7 +52,7 @@ public class ModelMapperConfig {
 
     PropertyMap<Veicolo, VeicoloDto> veicoloMapping = new PropertyMap<Veicolo, VeicoloDto>() {
         protected void configure() {
-            map().setId(source.getIdVeicoli());
+            map().setId(source.getIdVeicolo());
             map().setTarga(source.getTarga());
             map().setModello(source.getModello());
             map().setTipologia(source.getTipologia());
@@ -63,7 +63,7 @@ public class ModelMapperConfig {
 
     PropertyMap<VeicoloDto, Veicolo> veicoloDtoMapping = new PropertyMap<VeicoloDto, Veicolo>() {
         protected void configure() {
-            map().setIdVeicoli(source.getId());
+            map().setIdVeicolo(source.getId());
             map().setTarga(source.getTarga());
             map().setModello(source.getModello());
             map().setTipologia(source.getTipologia());

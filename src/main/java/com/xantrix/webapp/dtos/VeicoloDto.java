@@ -3,6 +3,9 @@ package com.xantrix.webapp.dtos;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 public class VeicoloDto {
@@ -18,4 +21,6 @@ public class VeicoloDto {
     private String casaProduttrice;
 
     private String tipologia;
+
+    private Set<PrenotazioneDto> prenotazioneDtoSet = new HashSet<>();
 }

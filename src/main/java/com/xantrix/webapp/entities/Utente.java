@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "utenti")
@@ -38,4 +40,7 @@ public class Utente {
 
     @Column(name = "ruolo")
     private String ruolo;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "idutente", orphanRemoval = true)
+    private Set<Prenotazione> prenotazioni = new HashSet<>();
 }

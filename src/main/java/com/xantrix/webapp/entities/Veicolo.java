@@ -3,6 +3,9 @@ package com.xantrix.webapp.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "veicoli")
 @Getter
@@ -15,7 +18,7 @@ public class Veicolo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idveicolo")
-    private Integer idVeicoli;
+    private Integer idVeicolo;
 
     @Column(name = "targa")
     private String targa;
@@ -31,4 +34,7 @@ public class Veicolo {
 
     @Column(name = "tipologia")
     private String tipologia;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "idveicolo", orphanRemoval = true)
+    private Set<Prenotazione> prenotazioni = new HashSet<>();
 }

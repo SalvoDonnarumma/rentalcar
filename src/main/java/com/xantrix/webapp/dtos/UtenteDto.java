@@ -1,11 +1,14 @@
 package com.xantrix.webapp.dtos;
 
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,4 +24,6 @@ public class UtenteDto {
     private String ruolo;
     private String email;
     private String password;
+
+    private Set<PrenotazioneDto> prenotazioneDtoSet = new HashSet<>();
 }
