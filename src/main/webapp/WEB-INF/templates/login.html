@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="common/head :: headFragment"></head>
+
+<body>
+
+<div th:replace="common/navbar :: navbarFragment"></div>
+<div th:replace="common/jumbotron :: jumbotronFragment"></div>
+
+<!-- Form Login -->
+<div id="mainWrapper">
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-form">
+
+        <form th:action="@{/login}" method="post" class="form-horizontal">
+
+          <div th:if="${param.error}" class="alert alert-danger">
+            <p>Nome utente o password errata!</p>
+          </div>
+
+          <div th:if="${param.forbidden}" class="alert alert-danger">
+            <p>Accesso Negato! Autenticarsi con un utente diverso</p>
+          </div>
+
+          <div th:if="${param.logout}" class="alert alert-success">
+            <p>Disconnessione eseguita con successo!</p>
+          </div>
+
+          <div class="input-group input-sm">
+            <label class="input-group-addon" for="userId"><i class="fa fa-user"></i></label>
+            <input type="text" class="form-control" id="userId" name="userId" placeholder="Nome Utente" required>
+          </div>
+
+          <div class="input-group input-sm">
+            <label class="input-group-addon" for="password"><i class="fa fa-lock"></i></label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+          </div>
+
+          <!-- CSRF token -->
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+          <div class="form-actions">
+            <input type="submit" class="btn btn-block btn-primary btn-default" value="Log in">
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:replace="common/foot :: footFragment"></div>
+
+<br>
+</body>
+</html>
