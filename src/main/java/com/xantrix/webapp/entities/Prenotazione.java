@@ -32,6 +32,9 @@ public class Prenotazione {
     @JoinColumn(name = "idveicolo_fk",  referencedColumnName = "idVeicolo")
     private Veicolo veicolo;
 
+    @Column(name = "stato")
+    private String stato;
+
     // Prenotazione.java
     @Override
     public String toString() {
@@ -39,6 +42,7 @@ public class Prenotazione {
                 "id=" + idPrenotazione +
                 ", utenteId=" + (utente != null ? utente.getIdUtente() : "null") +
                 ", veicoloId=" + (veicolo != null ? veicolo.getIdVeicolo() : "null") +
+                ", stato=" + stato +
                 '}';
     }
 

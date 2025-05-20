@@ -11,5 +11,4 @@ public interface PrenotazioniRepository extends JpaRepository<Prenotazione, Inte
     Page<Prenotazione> findByUtenteIdUtente(Integer idUtente, Pageable pageable);
     Page<Prenotazione> findByVeicoloIdVeicolo(Integer idVeicolo, Pageable pageable);
     Page<Prenotazione> findByIdPrenotazione(Integer idPrenotazione, Pageable pageable);
-
 }

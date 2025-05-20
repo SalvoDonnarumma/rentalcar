@@ -17,6 +17,8 @@ public class PrenotazioneDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dataFine;
 
+    private String stato;
+
     private Integer idUtente;
     private Integer idVeicolo;
 
@@ -29,6 +31,7 @@ public class PrenotazioneDto {
                 "id=" + idPrenotazione +
                 ", utenteId=" + (utente != null ? utente.getId() : "null") +
                 ", veicoloId=" + (veicolo != null ? veicolo.getId() : "null") +
+                ", stato=" + stato +
                 '}';
     }
 }

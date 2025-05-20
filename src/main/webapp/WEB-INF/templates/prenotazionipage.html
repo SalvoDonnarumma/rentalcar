@@ -13,32 +13,11 @@
 
     <div class="content-header">
         <h2 class="content-title">Lista Prenotazioni per del cliente: </h2>
-        <div>
-            <a th:href="@{/homepage/aggiungi}" class="btn btn-primary newart">
-                <i class="material-icons md-plus"></i>
-                Nuovo
-            </a>
-        </div>
     </div>
 
     <div class="card mb-4">
         <header class="card-header">
             <div class="row gx-3">
-                <div class="col-lg-4 col-md-6 me-auto">
-                    <form class="form-inline my-2 my.lg-0" id="search" method="GET" th:action="@{'/homepage/search/parametri;paging=0,0?selected=10&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}">
-                        <input type="text" id="filtroInput" name="filtro" th:value="${filtro}" placeholder="Cerca..." class="form-control"/>
-
-                        <select class="form-select mt-2" name="campoFiltro">
-                            <option value="nome">Nome</option>
-                            <option value="cognome">Cognome</option>
-                            <option value="email">Email</option>
-                            <option value="dataNascita">Anno di nascita</option>
-                        </select>
-
-                        <button type="submit" class="btn btn-primary mt-2">Cerca</button>
-                    </form>
-                </div>
-
                 <div class="col-lg-2 col-6 col-md-3">
                     <form>
                         <select id="righe" class="form-select" onchange="refreshPage()">
@@ -63,31 +42,42 @@
                         <th>Modello Veicolo</th>
                         <th>Prenotato dal: </th>
                         <th>Fino al: </th>
+                        <th>Stato: </th>
                         <th class="text-end">Azione</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="prenotazione : ${prenotazioni}">
-                        <td class="tbl-string" th:text="${prenotazione}"></td>
-                        <td class="tbl-string" th:text="${user.cognome}"></td>
-                        <td class="tbl-string" th:text="${user.email}"></td>
-                        <td class="tbl-string" th:text="${#dates.format(user.dataNascita, 'dd/MM/yyyy')}"></td>
-                        <td class="tbl-string" th:text="${user.ruolo}"></td>
+                    <tr th:each="pren : ${prenotazioni}">
+                        <td class="tbl-string" th:text="${pren.getIdPrenotazione()}"></td>
+                        <td class="tbl-string" th:text="${pren.getUtente().getEmail()}"></td>
+                        <td class="tbl-string" th:text="${pren.getVeicolo().getTarga()}"></td>
+                        <td class="tbl-string" th:text="${pren.getVeicolo().getModello()}"></td>
+                        <td class="tbl-string" th:text="${#dates.format(pren.getDataInizio(), 'dd/MM/yyyy')}"></td>
+                        <td class="tbl-string" th:text="${#dates.format(pren.getDataFine(), 'dd/MM/yyyy')}"></td>
+                        <td class="tbl-string" th:text="${pren.getStato()}"></td>
 
                         <td class="text-end">
-                            <a th:href="@{'/homepage/elimina/'+${user.id}}" class="btn btn-light text-danger">Elimina</a>
+                            <a th:if="${pren.getStato() == 'IN ATTESA'}"
+                               th:href="@{'/homepage/declina/' + ${pren.getIdPrenotazione()}}"
+                               class="btn btn-light text-danger">
+                                Declina
+                            </a>
+                            <a th:unless="${pren.getStato() == 'IN ATTESA'}"
+                               class="btn btn-light text-danger disabled text-opacity-50"
+                               style="pointer-events: none; cursor: not-allowed;">
+                                Declina
+                            </a>
 
-                            <!-- DropDown Menu -->
-                            <div class="dropdown">
-                                <a href="#" data-bs-toggle="dropdown" class="btn btn-light">
-                                    <i class="material-icons md-more_horiz"></i>
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Dettaglio</a></li>
-                                    <li><a class="dropdown-item" href="#">Visualizza prenotazioni</a></li>
-                                    <li><a class="dropdown-item" th:href="@{'/homepage/modifica/'+${user.id}}">Modifica</a></li>
-                                </ul>
-                            </div>
+                            <a th:if="${pren.getStato() == 'IN ATTESA'}"
+                               th:href="@{'/homepage/approva/' + ${pren.getIdPrenotazione()}}"
+                               class="btn btn-light text-bg-success">
+                                Approva
+                            </a>
+                            <a th:unless="${pren.getStato() == 'IN ATTESA'}"
+                               class="btn btn-light text-bg-success disabled text-opacity-50"
+                               style="pointer-events: none; cursor: not-allowed;">
+                                Approva
+                            </a>
                         </td>
                     </tr>
                     </tbody>

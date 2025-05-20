@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<th:block th:replace="common/head :: head"></th:block>
+
+<body>
+
+<!-- Navbar comune -->
+<th:block th:replace="common/navbar :: navbarFragment"></th:block>
+
+<section class="content-main">
+
+  <div class="content-header">
+    <h2 class="content-title">Le mie prenotazioni: </h2>
+  </div>
+
+  <div class="card mb-4">
+    <header class="card-header">
+      <div class="row gx-3">
+        <div class="col-lg-2 col-6 col-md-3">
+          <form>
+            <select id="righe" class="form-select" onchange="refreshPage()">
+              <option>--Righe--</option>
+              <option value="10">Mostra 10</option>
+              <option value="20">Mostra 20</option>
+              <option value="30">Mostra 30</option>
+            </select>
+          </form>
+        </div>
+      </div>
+    </header>
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th>Codice prenotazione</th>
+            <th>Email utente</th>
+            <th>Targa Veicolo</th>
+            <th>Modello Veicolo</th>
+            <th>Prenotato dal: </th>
+            <th>Fino al: </th>
+            <th>Stato: </th>
+            <th class="text-end">Azione</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="pren : ${prenotazioni}">
+            <td class="tbl-string" th:text="${pren.getIdPrenotazione()}"></td>
+            <td class="tbl-string" th:text="${pren.getUtente().getEmail()}"></td>
+            <td class="tbl-string" th:text="${pren.getVeicolo().getTarga()}"></td>
+            <td class="tbl-string" th:text="${pren.getVeicolo().getModello()}"></td>
+            <td class="tbl-string" th:text="${#dates.format(pren.getDataInizio(), 'dd/MM/yyyy')}"></td>
+            <td class="tbl-string" th:text="${#dates.format(pren.getDataFine(), 'dd/MM/yyyy')}"></td>
+            <td class="tbl-string" th:text="${pren.getStato()}"></td>
+
+            <td class="text-end">
+              <a th:href="@{'/homepage/declina/' + ${pren.getIdPrenotazione()}}"
+                 class="btn btn-light text-bg-primary">
+                Modifica
+              </a>
+              <a th:href="@{'/homepage/declina/' + ${pren.getIdPrenotazione()}}"
+                 class="btn btn-light text-bg-primary">
+                Cancella
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+        <div th:if="${notFound}" class="alert alert-danger" role="alert">
+          Non sono presenti prenotazioni!
+        </div>
+
+        <!-- Inizio Blocco Paginazione -->
+        <nav class="float-end mt-3" aria-label="Page navigation">
+          <ul class="pagination">
+
+            <!-- Tasto Previous -->
+            <li class="page-item" th:classappend="${pageNum <= 1} ? 'disabled'">
+              <a class="page-link"
+                 th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',-1?selected=' + ${recPage}+ '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}"
+                 aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Precedente</span>
+              </a>
+            </li>
+
+            <!-- Pagine numerate -->
+            <li class="page-item"
+                th:each="pagina : ${pages}"
+                th:classappend="${pagina.selected} ? 'active'">
+              <a  class="page-link"
+                  th:href="@{'/homepage/search/parametri;paging=' + ${pagina.pageNum} + ',0?selected=' + ${recPage} + '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}">
+                <span th:text="${pagina.pageNum}">1</span>
+              </a>
+            </li>
+
+            <!-- Tasto Next -->
+            <li class="page-item">
+              <a class="page-link"
+                 th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',1?selected=' + ${recPage}+ '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}"
+                 aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Successivo</span>
+              </a>
+            </li>
+
+          </ul>
+        </nav>
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  document.getElementById("filtroInput").addEventListener("click", function () {
+    this.select();
+  });
+
+  function refreshPage() {
+    var selectedValue = document.getElementById("righe").value;
+    window.location.href = "?filtro=[[${filtro}]]&selected=" + selectedValue;
+  }
+</script>
+
+<th:block th:replace="common/foot :: footFragment"></th:block>
+
+</body>
+</html>

@@ -7,6 +7,16 @@
     margin-left: 0.5em;
     width: 6em;
 }
+button:disabled {
+    opacity: 0.5;             /* aspetto più opaco */
+    pointer-events: none;     /* blocca gli hover/click */
+    cursor: not-allowed;      /* cursore disabilitato */
+}
+
+button:disabled:hover {
+    background-color: inherit; /* niente hover visivo */
+    color: inherit;
+}
 
 .jumbotron-billboard .img {
     margin-bottom: 0px;

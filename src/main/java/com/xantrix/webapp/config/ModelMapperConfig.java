@@ -112,6 +112,7 @@ public class ModelMapperConfig {
             map().setDataInizio(source.getDataInizio());
             map().setIdUtente(source.getUtente().getIdUtente());
             map().setIdVeicolo(source.getVeicolo().getIdVeicolo());
+            map().setStato(source.getStato());
         }
     };
 
@@ -121,6 +122,7 @@ public class ModelMapperConfig {
             map().setDataInizio(source.getDataInizio());
             map().getUtente().setIdUtente(source.getIdUtente());
             map().getVeicolo().setIdVeicolo(source.getIdVeicolo());
+            map().setStato(source.getStato());
         }
     };
 
