@@ -4,6 +4,8 @@ import com.xantrix.webapp.dtos.PagingData;
 import com.xantrix.webapp.dtos.UtenteDto;
 import com.xantrix.webapp.services.UtentiService;
 import com.xantrix.webapp.utils.Paging;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -30,10 +32,22 @@ public class UtentiController {
 
     @GetMapping
     public String homepage(
+            Authentication authentication,
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
             Model model) {
 
-        return "redirect:/homepage/search/parametri;paging=0,0?selected=10";
+        if (authentication != null) {
+            for (GrantedAuthority authority : authentication.getAuthorities()) {
+                String role = authority.getAuthority();
+                if (role.equals("ROLE_ADMIN")) {
+                    return "redirect:/homepage/search/parametri;paging=0,0?selected=10";
+                } else if (role.equals("ROLE_USER")) {
+                    return "redirect:/homepage/customerhomepage";
+                }
+            }
+        }
+
+        return "login";
     }
 
     //http://localhost:8080/alphashop/articoli/cerca/parametri;paging=0,1?filtro=acqua&selected=10
@@ -134,5 +148,12 @@ public class UtentiController {
         }
 
         return "redirect:/homepage/search/parametri;paging=0,0?filtro="+id+"&campoFiltro=id";
+    }
+
+    @GetMapping(value="/customerhomepage")
+    public String GetCustomerPage(Model model){
+        model.addAttribute("title", "CUSTOMER HOMEPAGE");
+
+        return "costumerhomepage";
     }
 }

@@ -53,7 +53,9 @@
                         <div class="dropdown-menu dropdown-menu-end">
                             <a class="dropdown-item" th:href="@{/login/form}">Accedi</a>
                             <hr class="dropdown-divider">
-                            <a class="dropdown-item text-danger" th:href="@{/logout}">Logout</a>
+                            <form th:action="@{/logout}" method="post">
+                                <button type="submit" class="btn btn-danger">Logout</button>
+                            </form>
                         </div>
                     </li>
                 </ul>

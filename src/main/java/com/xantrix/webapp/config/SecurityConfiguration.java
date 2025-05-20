@@ -66,11 +66,11 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests( (authorize) -> authorize
-                        .requestMatchers("/homepage/**","homepage/search/**","/homepage/aggiungi/**","/homepage/elimina/**", "/homepage/modifica/**",
+                        .requestMatchers("homepage/search/**","/homepage/aggiungi/**","/homepage/elimina/**", "/homepage/modifica/**",
                                 "/parcoauto/**", "/parcoauto/aggiungi/**", "/parcoauto/elimina/**", "/parcoauto/modifica/**", "/parcoauto/search/**",
                                 "/prenotazioni/**")
                             .hasRole("ADMIN")
-                        .requestMatchers("/homepage/**", "homepage/search/**").hasRole("USER")
+                        .requestMatchers("/homepage/**", "homepage/search/**").authenticated()
                         .anyRequest().permitAll())
                 .formLogin(form -> form
                         .loginPage("/login/form")

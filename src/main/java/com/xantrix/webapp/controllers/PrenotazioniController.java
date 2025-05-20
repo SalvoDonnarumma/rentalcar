@@ -64,9 +64,4 @@ public class PrenotazioniController {
 
         return "prenotazionipage";
     }
-
-    @GetMapping("/aggiungi")
-    public String AggiungiPrenotazioni(){
-
-    }
 }
