@@ -3,6 +3,7 @@ package com.xantrix.webapp.services;
 import com.xantrix.webapp.dtos.PrenotazioneDto;
 import com.xantrix.webapp.entities.Prenotazione;
 import com.xantrix.webapp.entities.Utente;
+import com.xantrix.webapp.entities.Veicolo;
 import com.xantrix.webapp.repository.PrenotazioniRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +35,20 @@ public class PrenotazioniServiceImpl implements PrenotazioniService {
     @Override
     public List<PrenotazioneDto> SelByIdUtente(Integer idUtente, int pageNum, int recForPage) {
         Pageable pageAndRecords = PageRequest.of(pageNum, recForPage);
-        return ConvertToDto(prenotazioniRepository.findByUtente(idUtente, pageAndRecords).getContent());
+        return ConvertToDto(prenotazioniRepository.findByUtenteIdUtente(idUtente, pageAndRecords).getContent());
     }
 
     @Override
     public List<PrenotazioneDto> SelByIdVeicolo(Integer idVeicolo, int pageNum, int recForPage) {
         Pageable pageAndRecords = PageRequest.of(pageNum, recForPage);
-        return ConvertToDto(prenotazioniRepository.findByVeicolo(idVeicolo, pageAndRecords).getContent());
+        return ConvertToDto(prenotazioniRepository.findByVeicoloIdVeicolo(idVeicolo, pageAndRecords).getContent());
     }
+
+    @Override
+    public List<PrenotazioneDto> SelByVeicolo(Veicolo veicolo, int pageNum, int recForPage) {
+        return List.of();
+    }
+
 
     private List<PrenotazioneDto> ConvertToDto(List<Prenotazione> prenotazioni) {
 

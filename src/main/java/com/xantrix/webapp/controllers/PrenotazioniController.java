@@ -55,7 +55,8 @@ public class PrenotazioniController {
         else {
             veicolo = veicoliService.SelById(id);
             System.out.println("Lista di prenotazioni che interessano il veicolo: "+veicolo.getTarga());
-            veicolo.getPrenotazioneDtoSet().forEach(System.out::println);
+            veicolo.getPrenotazioni().forEach(System.out::println);
+            prenotazioni = veicolo.getPrenotazioni();
         }
 
         model.addAttribute("prenotazioni", prenotazioni);

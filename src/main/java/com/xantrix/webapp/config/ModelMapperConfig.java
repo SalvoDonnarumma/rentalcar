@@ -60,7 +60,7 @@ public class ModelMapperConfig {
 
     PropertyMap<Utente, UtenteDto> utenteMapping = new PropertyMap<Utente, UtenteDto>() {
         protected void configure() {
-            map().setId(source.getIdutente());
+            map().setId(source.getIdUtente());
             map().setNome(source.getNome());
             map().setCognome(source.getCognome());
             map().setDataNascita(source.getDataNascita());
@@ -73,7 +73,7 @@ public class ModelMapperConfig {
 
     PropertyMap<UtenteDto, Utente> utenteDtoMapping = new PropertyMap<UtenteDto, Utente>() {
         protected void configure() {
-            map().setIdutente(source.getId());
+            map().setIdUtente(source.getId());
             map().setNome(source.getNome());
             map().setCognome(source.getCognome());
             map().setDataNascita(source.getDataNascita());
@@ -110,7 +110,7 @@ public class ModelMapperConfig {
         protected void configure() {
             map().setDataFine(source.getDataFine());
             map().setDataInizio(source.getDataInizio());
-            map().setIdUtente(source.getUtente().getIdutente());
+            map().setIdUtente(source.getUtente().getIdUtente());
             map().setIdVeicolo(source.getVeicolo().getIdVeicolo());
         }
     };
@@ -119,7 +119,7 @@ public class ModelMapperConfig {
         protected void configure() {
             map().setDataFine(source.getDataFine());
             map().setDataInizio(source.getDataInizio());
-            map().getUtente().setIdutente(source.getIdUtente());
+            map().getUtente().setIdUtente(source.getIdUtente());
             map().getVeicolo().setIdVeicolo(source.getIdVeicolo());
         }
     };

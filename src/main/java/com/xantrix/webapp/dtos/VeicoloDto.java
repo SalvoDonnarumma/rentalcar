@@ -22,5 +22,5 @@ public class VeicoloDto {
 
     private String tipologia;
 
-    private Set<PrenotazioneDto> prenotazioneDtoSet = new HashSet<>();
+    private Set<PrenotazioneDto> prenotazioni = new HashSet<>();
 }

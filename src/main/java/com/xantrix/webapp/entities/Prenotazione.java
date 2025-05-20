@@ -24,12 +24,12 @@ public class Prenotazione {
     @Column(name = "data_fine")
     private Date dataFine;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "idutente_fk",  referencedColumnName = "idutente")
+    @ManyToOne
+    @JoinColumn(name = "idutente_fk",  referencedColumnName = "idUtente")
     private Utente utente;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "idveicolo_fk",  referencedColumnName = "idveicolo")
+    @ManyToOne
+    @JoinColumn(name = "idveicolo_fk",  referencedColumnName = "idVeicolo")
     private Veicolo veicolo;
 
     // Prenotazione.java
@@ -37,7 +37,7 @@ public class Prenotazione {
     public String toString() {
         return "Prenotazione{" +
                 "id=" + idPrenotazione +
-                ", utenteId=" + (utente != null ? utente.getIdutente() : "null") +
+                ", utenteId=" + (utente != null ? utente.getIdUtente() : "null") +
                 ", veicoloId=" + (veicolo != null ? veicolo.getIdVeicolo() : "null") +
                 '}';
     }
