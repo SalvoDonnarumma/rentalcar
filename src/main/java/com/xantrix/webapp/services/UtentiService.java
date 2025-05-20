@@ -17,4 +17,6 @@ public interface UtentiService {
     public void DeleteCostumer(Integer id);
 
     public UtenteDto SelById(Integer id);
+
+    public UtenteDto SelByEmail(String email);
 }

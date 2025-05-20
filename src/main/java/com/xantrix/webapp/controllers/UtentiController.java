@@ -6,6 +6,7 @@ import com.xantrix.webapp.services.UtentiService;
 import com.xantrix.webapp.utils.Paging;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -22,12 +23,14 @@ public class UtentiController {
 
     private UtentiService utentiService;
     private Paging paging;
+    private PasswordEncoder passwordEncoder;
 
     List<PagingData> pages = new ArrayList<>();
 
-    private UtentiController(UtentiService utentiService, Paging paging) {
+    private UtentiController(UtentiService utentiService, Paging paging, PasswordEncoder passwordEncoder) {
         this.utentiService = utentiService;
         this.paging = paging;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping
@@ -35,6 +38,8 @@ public class UtentiController {
             Authentication authentication,
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
             Model model) {
+
+        System.out.println(">>> Utente autenticato: " + authentication.getName() + "con ruolo"+ authentication.getAuthorities());
 
         if (authentication != null) {
             for (GrantedAuthority authority : authentication.getAuthorities()) {
@@ -119,7 +124,7 @@ public class UtentiController {
             BindingResult result){
 
         utente.setRuolo("costumer");
-        System.out.println("Utente da inserire: "+utente);
+        utente.setPassword(passwordEncoder.encode(utente.getPassword()));
         utentiService.InsertCostumer(utente);
         return "redirect:/homepage/search/parametri;paging=0,0?filtro="+utente.getEmail()+"&campoFiltro=email";
     }

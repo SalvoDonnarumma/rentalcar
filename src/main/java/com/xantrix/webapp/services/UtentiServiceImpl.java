@@ -81,6 +81,13 @@ public class UtentiServiceImpl implements UtentiService {
         return ConvertToDto(utente);
     }
 
+    @Override
+    public UtenteDto SelByEmail(String email) {
+        Pageable pageAndRecords = PageRequest.of(0, 1);
+        Utente utente = utentiRepository.findByEmailContainingIgnoreCase(email, pageAndRecords).getContent().get(0);
+        return ConvertToDto(utente);
+    }
+
     private List<UtenteDto> ConvertToDto(List<Utente> utenti) {
         List<UtenteDto> utentiDtoList = utenti
                 .stream()

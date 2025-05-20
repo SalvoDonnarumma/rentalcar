@@ -1,37 +1,48 @@
-package com.xantrix.webapp.config;
+package com.xantrix.webapp.config.security;
 
+import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.*;
 import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.security.web.firewall.StrictHttpFirewall;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    @Autowired
+    @Qualifier("customUtenteDetailsService")
+    private UserDetailsService userDetailsService;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();  // Solo per testing
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -44,40 +55,31 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-
-        UserDetails user = User.builder()
-                .username("Salvatore")
-                .password(encoder.encode("123_Stella"))
-                .roles("USER")
-                .build();
-
-        UserDetails admin = User.builder()
-                .username("Admin")
-                .password(encoder.encode("VerySecretPsw"))
-                .roles("USER", "ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(user, admin);
+    public DaoAuthenticationProvider getAuthenticationProvider() {
+        CustomAuthenticationProvider provider = new CustomAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
     }
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .authenticationProvider(getAuthenticationProvider())
                 .authorizeHttpRequests( (authorize) -> authorize
-                        .requestMatchers("homepage/search/**","/homepage/aggiungi/**","/homepage/elimina/**", "/homepage/modifica/**",
-                                "/parcoauto/**", "/parcoauto/aggiungi/**", "/parcoauto/elimina/**", "/parcoauto/modifica/**", "/parcoauto/search/**",
-                                "/prenotazioni/**")
-                            .hasRole("ADMIN")
-                        .requestMatchers("/homepage/**", "homepage/search/**").authenticated()
+                        .requestMatchers("/homepage/aggiungi/**","/homepage/elimina/**", "/homepage/modifica/**",
+                                      "/parcoauto/**", "/parcoauto/aggiungi/**", "/parcoauto/elimina/**", "/parcoauto/modifica/**", "/parcoauto/search/**",
+                                      "/prenotazioni/**")
+                                  .hasRole("ADMIN")
+                              .requestMatchers("/homepage/**", "homepage/search/**").authenticated()
                         .anyRequest().permitAll())
                 .formLogin(form -> form
                         .loginPage("/login/form")
                         .loginProcessingUrl("/login")
-                        .failureUrl("/login/form?error")
-                        .usernameParameter("userId")
+                        .usernameParameter("email")
                         .passwordParameter("password")
+                        .failureHandler(authenticationFailureHandler())
                 )
                 .exceptionHandling(ex -> ex
                         .accessDeniedPage("/login/form?forbidden")
@@ -101,6 +103,12 @@ public class SecurityConfiguration {
         return http.build();
     }
 
+    private AuthenticationFailureHandler authenticationFailureHandler() {
+        return (request, response, exception) -> {
+            System.out.println(">>> Autenticazione fallita: " + exception.getMessage());
+            new SimpleUrlAuthenticationFailureHandler("/login/form?error").onAuthenticationFailure(request, response, exception);
+        };
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
