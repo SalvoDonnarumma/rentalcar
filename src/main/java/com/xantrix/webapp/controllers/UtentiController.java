@@ -1,7 +1,9 @@
 package com.xantrix.webapp.controllers;
 
 import com.xantrix.webapp.dtos.PagingData;
+import com.xantrix.webapp.dtos.PrenotazioneDto;
 import com.xantrix.webapp.dtos.UtenteDto;
+import com.xantrix.webapp.services.PrenotazioniService;
 import com.xantrix.webapp.services.UtentiService;
 import com.xantrix.webapp.utils.Paging;
 import org.springframework.security.core.Authentication;
@@ -16,21 +18,24 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/homepage")
 public class UtentiController {
 
     private UtentiService utentiService;
+    private PrenotazioniService prenotazioniService;
     private Paging paging;
     private PasswordEncoder passwordEncoder;
 
     List<PagingData> pages = new ArrayList<>();
 
-    private UtentiController(UtentiService utentiService, Paging paging, PasswordEncoder passwordEncoder) {
+    private UtentiController(UtentiService utentiService, Paging paging, PasswordEncoder passwordEncoder, PrenotazioniService prenotazioniService) {
         this.utentiService = utentiService;
         this.paging = paging;
         this.passwordEncoder = passwordEncoder;
+        this.prenotazioniService = prenotazioniService;
     }
 
     @GetMapping
@@ -39,15 +44,13 @@ public class UtentiController {
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
             Model model) {
 
-        System.out.println(">>> Utente autenticato: " + authentication.getName() + "con ruolo"+ authentication.getAuthorities());
-
         if (authentication != null) {
             for (GrantedAuthority authority : authentication.getAuthorities()) {
                 String role = authority.getAuthority();
                 if (role.equals("ROLE_ADMIN")) {
                     return "redirect:/homepage/search/parametri;paging=0,0?selected=10";
                 } else if (role.equals("ROLE_USER")) {
-                    return "redirect:/homepage/customerhomepage";
+                    return "redirect:/homepage/customerhomepage/parametri;paging=0,0?selected=10";
                 }
             }
         }
@@ -155,9 +158,64 @@ public class UtentiController {
         return "redirect:/homepage/search/parametri;paging=0,0?filtro="+id+"&campoFiltro=id";
     }
 
-    @GetMapping(value="/customerhomepage")
-    public String GetCustomerPage(Model model){
+    @GetMapping(value="/customerhomepage/{parametri}")
+    public String GetCustomerPage(
+            Authentication authentication,
+            @MatrixVariable(pathVar = "parametri") Map<String, List<String>> parametri,
+            @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
+            @RequestParam(name = "dataInizio", required = false, defaultValue = "") String dataInit,
+            @RequestParam(name = "dataFine", required = false, defaultValue = "") String dataFin,
+            Model model){
+
+        String email = authentication.getName();
+        UtenteDto utenteLogged = utentiService.SelByEmail(email);
+
+        int numCos = 0;
+        int pageNum = 0;
+        int recForPage = 10;
+        int diffPage = 0;
+        boolean notFound = true;
+
+        //PARAMETRI PAGING
+        List<String> paramPaging = parametri.get("paging");
+
+        if(paramPaging != null){
+            try{
+                pageNum = Integer.parseInt(paramPaging.get(0)); //Numero della pagina
+                recForPage = Integer.parseInt(selected); //Record per pagina
+                diffPage = Integer.parseInt(paramPaging.get(1));
+
+                if(pageNum >= 1)
+                    pageNum+= diffPage;
+                else
+                    pageNum = 1;
+            } catch (NumberFormatException e){
+                pageNum = 0;
+                diffPage = 0;
+                recForPage = 10;
+            }
+        }
+
+        int realPage = (pageNum > 0) ? pageNum - 1 : 0;
+
+        System.out.println(">>>>Data "+dataInit);
+
+        List<PrenotazioneDto> prenotazioni = prenotazioniService.SelByIdUtente(utenteLogged.getId(), realPage, recForPage, dataInit, dataFin);
+        if(!prenotazioni.isEmpty()){
+            notFound = false;
+        }
+
+        numCos = prenotazioni.size();
+        pages = paging.setPages(pageNum, numCos);
+
         model.addAttribute("title", "CUSTOMER HOMEPAGE");
+        model.addAttribute("email", utenteLogged.getEmail());
+        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("recPage", recForPage);
+        model.addAttribute("pages", pages);
+        model.addAttribute("prenotazioni", prenotazioni);
+        model.addAttribute("dataInit", dataInit);
+        model.addAttribute("dataFin", dataFin);
 
         return "costumerhomepage";
     }

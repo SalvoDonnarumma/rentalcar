@@ -2,15 +2,18 @@ package com.xantrix.webapp.services;
 
 import com.xantrix.webapp.dtos.PrenotazioneDto;
 import com.xantrix.webapp.entities.Prenotazione;
-import com.xantrix.webapp.entities.Utente;
 import com.xantrix.webapp.entities.Veicolo;
 import com.xantrix.webapp.repository.PrenotazioniRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,9 +36,34 @@ public class PrenotazioniServiceImpl implements PrenotazioniService {
     }
 
     @Override
-    public List<PrenotazioneDto> SelByIdUtente(Integer idUtente, int pageNum, int recForPage) {
+    public List<PrenotazioneDto> SelByIdUtente(Integer idUtente, int pageNum, int recForPage, String dataInit, String dataFin) {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date inizio = null;
+        Date fine = null;
+
         Pageable pageAndRecords = PageRequest.of(pageNum, recForPage);
-        return ConvertToDto(prenotazioniRepository.findByUtenteIdUtente(idUtente, pageAndRecords).getContent());
+        Page<Prenotazione> prenotazioni = null;
+
+        try {
+                if(!dataInit.isBlank() && !dataFin.isBlank()) {
+                    inizio = new java.sql.Date(formatter.parse(dataInit).getTime());
+                    fine = new java.sql.Date(formatter.parse(dataFin).getTime());
+                    prenotazioni = prenotazioniRepository.findByUtenteIdUtenteAndDataInizioBetween(idUtente, inizio, fine, pageAndRecords);
+                } else if(!dataFin.isBlank()) {
+                    fine = new java.sql.Date(formatter.parse(dataFin).getTime());
+                    prenotazioni = prenotazioniRepository.findByUtenteIdUtenteAndDataInizioLessThanEqual(idUtente, fine, pageAndRecords);
+                } else if(!dataInit.isBlank()) {
+                    inizio = new java.sql.Date(formatter.parse(dataInit).getTime());
+                    prenotazioni = prenotazioniRepository.findByUtenteIdUtenteAndDataInizioGreaterThanEqual(idUtente, inizio, pageAndRecords);
+                } else {
+                    prenotazioni = prenotazioniRepository.findByUtenteIdUtente(idUtente, pageAndRecords);
+                }
+        } catch (ParseException e) {
+                throw new RuntimeException(e);
+        }
+
+        return ConvertToDto(prenotazioni.getContent());
     }
 
     @Override

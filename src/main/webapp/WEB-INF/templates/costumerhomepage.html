@@ -18,6 +18,20 @@
   <div class="card mb-4">
     <header class="card-header">
       <div class="row gx-3">
+
+        <div class="col-lg-4 col-md-6 me-auto">
+          <form class="form-inline my-2 my.lg-0" id="search" method="GET"
+                th:action="@{'/homepage/customerhomepage/parametri;paging=' + ${pageNum} + ',0?selected=' + ${recPage}+ '&datainit='+${dataInit}+'&datafin='+${dataFin}}">
+            <label for="dataInizio" class="form-label mt-2">Data inizio:</label>
+            <input type="date" id="dataInizio" name="dataInizio" th:value="${dataInizio}" class="form-control"/>
+
+            <label for="dataFine" class="form-label mt-2">Data fine:</label>
+            <input type="date" id="dataFine" name="dataFine" th:value="${dataFine}" class="form-control"/>
+
+            <button type="submit" class="btn btn-primary mt-2">Cerca per date</button>
+          </form>
+        </div>
+
         <div class="col-lg-2 col-6 col-md-3">
           <form>
             <select id="righe" class="form-select" onchange="refreshPage()">
@@ -81,7 +95,7 @@
             <!-- Tasto Previous -->
             <li class="page-item" th:classappend="${pageNum <= 1} ? 'disabled'">
               <a class="page-link"
-                 th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',-1?selected=' + ${recPage}+ '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}"
+                 th:href="@{'/homepage/customerhomepage/parametri;paging=' + ${pageNum} + ',-1?selected=' + ${recPage}+ '&datainit='+${dataInit}+'&datafin='+${dataFin}}"
                  aria-label="Previous">
                 <span aria-hidden="true">&laquo;</span>
                 <span class="sr-only">Precedente</span>
@@ -93,7 +107,7 @@
                 th:each="pagina : ${pages}"
                 th:classappend="${pagina.selected} ? 'active'">
               <a  class="page-link"
-                  th:href="@{'/homepage/search/parametri;paging=' + ${pagina.pageNum} + ',0?selected=' + ${recPage} + '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}">
+                  th:href="@{'/homepage/customerhomepage/parametri;paging=' + ${pageNum} + ',0?selected=' + ${recPage}+ '&datainit='+${dataInit}+'&datafin='+${dataFin}}">
                 <span th:text="${pagina.pageNum}">1</span>
               </a>
             </li>
@@ -101,7 +115,7 @@
             <!-- Tasto Next -->
             <li class="page-item">
               <a class="page-link"
-                 th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',1?selected=' + ${recPage}+ '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}"
+                 th:href="@{'/homepage/customerhomepage/parametri;paging=' + ${pageNum} + ',1?selected=' + ${recPage}+ '&datainit='+${dataInit}+'&datafin='+${dataFin}}"
                  aria-label="Next">
                 <span aria-hidden="true">&raquo;</span>
                 <span class="sr-only">Successivo</span>
