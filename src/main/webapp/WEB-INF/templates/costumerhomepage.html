@@ -13,6 +13,12 @@
 
   <div class="content-header">
     <h2 class="content-title">Le mie prenotazioni: </h2>
+    <div>
+      <a th:href="@{/parcoauto}" class="btn btn-primary newart">
+        <i class="material-icons md-plus"></i>
+        Nuovo
+      </a>
+    </div>
   </div>
 
   <div class="card mb-4">
@@ -71,11 +77,11 @@
             <td class="tbl-string" th:text="${pren.getStato()}"></td>
 
             <td class="text-end">
-              <a th:href="@{'/homepage/declina/' + ${pren.getIdPrenotazione()}}"
+              <a th:href="@{'/prenotazioni/modifica/' + ${pren.getIdPrenotazione()}}"
                  class="btn btn-light text-bg-primary">
                 Modifica
               </a>
-              <a th:href="@{'/homepage/declina/' + ${pren.getIdPrenotazione()}}"
+              <a th:href="@{'/prenotazioni/cancella/' + ${pren.getIdPrenotazione()}}"
                  class="btn btn-light text-bg-primary">
                 Cancella
               </a>

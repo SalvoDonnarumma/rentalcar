@@ -69,10 +69,13 @@ public class SecurityConfiguration {
                 .authenticationProvider(getAuthenticationProvider())
                 .authorizeHttpRequests( (authorize) -> authorize
                         .requestMatchers("/homepage/aggiungi/**","/homepage/elimina/**", "/homepage/modifica/**",
-                                      "/parcoauto/**", "/parcoauto/aggiungi/**", "/parcoauto/elimina/**", "/parcoauto/modifica/**", "/parcoauto/search/**",
-                                      "/prenotazioni/**")
+                                       "/parcoauto/aggiungi/**", "/parcoauto/elimina/**", "/parcoauto/modifica/**",
+                                      "/prenotazioni/approva")
                                   .hasRole("ADMIN")
-                              .requestMatchers("/homepage/**", "homepage/search/**").authenticated()
+                              .requestMatchers("/homepage/**", "homepage/search/**",
+                                      "/parcoauto", "/parcoauto/search/**",
+                                      "/prenotazioni/aggiungi/**", "prenotazioni/modifica/**", "prenotazioni/cancella/**")
+                                    .authenticated()
                         .anyRequest().permitAll())
                 .formLogin(form -> form
                         .loginPage("/login/form")

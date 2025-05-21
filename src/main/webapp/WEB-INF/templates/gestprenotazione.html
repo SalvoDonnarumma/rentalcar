@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="common/head :: head"></th:block>
+<body>
+
+<!-- Navbar -->
+<div th:replace="common/navbar :: navbarFragment"></div>
+
+<section class="content-main" style="max-width: 760px">
+  <h2 class="content-title" th:text="${title}">Gestione Prenotazione</h2>
+  <div class="content-header">
+    <a href="#" onclick="history.back()" class="btn btn-outline-danger">× Annulla</a>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <section>
+        <h3>Dettagli Veicolo</h3>
+        <p><strong>Targa:</strong> <span th:text="${dativeicolo.targa}"></span></p>
+        <p><strong>Modello:</strong> <span th:text="${dativeicolo.modello}"></span></p>
+        <p><strong>Casa Produttrice:</strong> <span th:text="${dativeicolo.casaProduttrice}"></span></p>
+        <h3>Dettagli Cliente</h3>
+        <p><strong>Email:</strong> <span th:text="${datiutente.email}"></span></p>
+        <p><strong>Nome:</strong> <span th:text="${datiutente.nome}"></span></p>
+        <p><strong>Cognome:</strong> <span th:text="${datiutente.cognome}"></span></p>
+      </section>
+
+      <form th:action="@{'/prenotazioni/aggiungi?idVeicolo='+${dativeicolo.getId()}+'&idUtente='+${datiutente.getId()}}" th:object="${datiprenotazione}" method="post">
+        <div th:if="${#fields.hasErrors()}" class="alert alert-danger">
+          <ul>
+            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+          </ul>
+        </div>
+
+        <div class="row gx-2">
+
+          <!-- Id Prenotazione-->
+          <input type="hidden" th:field="*{idPrenotazione}" />
+
+          <!-- Data Inizio -->
+          <fieldset class="col-sm-6 mb-3">
+            <label for="dataInizio" class="form-label">Data Inizio:</label>
+            <input type="date" id="dataInizio" th:field="*{dataInizio}" class="form-control" placeholder=""/>
+            <div class="text-danger" th:if="${#fields.hasErrors('dataInizio')}" th:errors="*{dataInizio}"></div>
+          </fieldset>
+
+          <!-- Data Fine -->
+          <fieldset class="col-sm-6 mb-3">
+            <label for="dataFine" class="form-label">Data Fine:</label>
+            <input type="date" id="dataFine" th:field="*{dataFine}" class="form-control" placeholder=""/>
+            <div class="text-danger" th:if="${#fields.hasErrors('dataInizio')}" th:errors="*{dataFine}"></div>
+          </fieldset>
+
+          <!-- Stato -->
+          <fieldset class="col-sm-6 mb-3">
+            <label for="stato" class="form-label">Stato:</label>
+            <p id="stato" class="form-control-plaintext" th:text="*{stato}"></p>
+          </fieldset>
+        </div>
+        <br>
+
+        <input type="submit" id="btnAdd" class="btn btn-primary form-buttons" value="Salva"/>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div th:replace="common/foot :: footFragment"></div>
+
+</body>
+</html>

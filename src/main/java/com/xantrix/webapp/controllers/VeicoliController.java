@@ -5,6 +5,8 @@ import com.xantrix.webapp.dtos.UtenteDto;
 import com.xantrix.webapp.dtos.VeicoloDto;
 import com.xantrix.webapp.services.VeicoliService;
 import com.xantrix.webapp.utils.Paging;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -80,6 +82,12 @@ public class VeicoliController {
         }
 
         pages = paging.setPages(pageNum, numVec);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
+
         model.addAttribute("veicoli", veicoli);
         model.addAttribute("notFound", notFound);
         model.addAttribute("title", "PARCO AUTO");

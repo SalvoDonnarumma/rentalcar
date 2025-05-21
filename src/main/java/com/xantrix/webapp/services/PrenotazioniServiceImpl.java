@@ -77,6 +77,11 @@ public class PrenotazioniServiceImpl implements PrenotazioniService {
         return List.of();
     }
 
+    @Override
+    public void InsertPrenotazione(PrenotazioneDto prenotazione) {
+        prenotazioniRepository.save(ConvertFromDto(prenotazione));
+    }
+
 
     private List<PrenotazioneDto> ConvertToDto(List<Prenotazione> prenotazioni) {
 
