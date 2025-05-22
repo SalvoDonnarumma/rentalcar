@@ -139,6 +139,7 @@ public class UtentiController {
                 redirectAttributes.addFlashAttribute("duplicateEmail", true);
                 return "redirect:/homepage/aggiungi";
             }
+            utente.setPassword(passwordEncoder.encode(utente.getPassword()));
             utentiService.InsertCostumer(utente);
             return "redirect:/homepage/search/parametri;paging=0,0?filtro="+utente.getEmail()+"&campoFiltro=email";
         }
