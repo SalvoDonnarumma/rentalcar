@@ -53,9 +53,8 @@ public class VeicoliController {
         int diffPage = 0;
         boolean notFound = true;
 
-        //PARAMETRI PAGING
+        //SEZIONE PAGING
         List<String> paramPaging = parametri.get("paging");
-
         if(paramPaging != null){
             try{
                 pageNum = Integer.parseInt(paramPaging.get(0)); //Numero della pagina
@@ -72,16 +71,16 @@ public class VeicoliController {
                 recForPage = 10;
             }
         }
-
         int realPage = (pageNum > 0) ? pageNum - 1 : 0;
+        pages = paging.setPages(pageNum, numVec);
+
+
         List<VeicoloDto> veicoli = veicoliService.SearchVeicoli(filtro, campoFiltro, realPage, recForPage);
         numVec = veicoliService.NumRecords();
 
         if(!veicoli.isEmpty()){
              notFound = false;
         }
-
-        pages = paging.setPages(pageNum, numVec);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         boolean isAdmin = authentication.getAuthorities().stream()

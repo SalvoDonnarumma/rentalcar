@@ -83,8 +83,8 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="#">Dettaglio</a></li>
-                                    <!--http://localhost:8080/rentalcar/prenotazioni/visualizza?id=20&campoFiltro=ut-->
-                                    <li><a class="dropdown-item" th:href="@{'/prenotazioni/visualizza?id='+${user.id}+'&campoFiltro=ut'}">Visualizza prenotazioni</a></li>
+                                    <!--http://localhost:8080/rentalcar/visualizzaprenot/parametri;paging=0,0?selected=10id=20&campoFiltro=ut-->
+                                    <li><a class="dropdown-item" th:href="@{'/prenotazioni/visualizzaprenot/parametri;paging=0,0?selected=10&id='+${user.id}+'&campoFiltro=ut'}">Visualizza prenotazioni</a></li>
                                     <li><a class="dropdown-item" th:href="@{'/homepage/modifica/'+${user.id}}">Modifica</a></li>
                                 </ul>
                             </div>

@@ -12,7 +12,7 @@
 <section class="content-main">
 
     <div class="content-header">
-        <h2 class="content-title">Lista Prenotazioni per del cliente: </h2>
+        <h2 class="content-title">Lista Prenotazioni del cliente: </h2>
     </div>
 
     <div class="card mb-4">
@@ -58,7 +58,7 @@
 
                         <td class="text-end">
                             <a th:if="${pren.getStato() == 'IN ATTESA'}"
-                               th:href="@{'/homepage/declina/' + ${pren.getIdPrenotazione()}}"
+                               th:href="@{'/prenotazioni/valida?idPrenotazione=' + ${pren.getIdPrenotazione()} + '&modificaStato=DECLINATO'}"
                                class="btn btn-light text-danger">
                                 Declina
                             </a>
@@ -69,7 +69,7 @@
                             </a>
 
                             <a th:if="${pren.getStato() == 'IN ATTESA'}"
-                               th:href="@{'/homepage/approva/' + ${pren.getIdPrenotazione()}}"
+                               th:href="@{'/prenotazioni/valida?idPrenotazione=' + ${pren.getIdPrenotazione()} + '&modificaStato=APPROVATO'}"
                                class="btn btn-light text-bg-success">
                                 Approva
                             </a>

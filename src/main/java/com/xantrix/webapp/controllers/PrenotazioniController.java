@@ -16,10 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @RequestMapping("/prenotazioni")
@@ -29,6 +26,7 @@ public class PrenotazioniController {
     private Paging paging;
     private UtentiService utentiService;
     private VeicoliService veicoliService;
+    private List<String> paramPaging;
 
     List<PagingData> pages = new ArrayList<>();
 
@@ -39,10 +37,13 @@ public class PrenotazioniController {
         this.veicoliService = veicoliService;
     }
 
-    @GetMapping("/visualizza")
+    //parametri;paging=0,0?selected=10#
+    @GetMapping("/visualizzaprenot/{parametri}")
     public String GetPrenotazioniPageFromUtente(
+            @MatrixVariable(pathVar = "parametri") Map<String, List<String>> parametri,
             @RequestParam(name= "id",required = true) Integer id,
             @RequestParam(name="campoFiltro",required = true) String campoFiltro,
+            @RequestParam(name="selected", required  =false, defaultValue = "10") String selected,
             Model model) {
 
         Set<PrenotazioneDto> prenotazioni = new HashSet<>();
@@ -61,8 +62,37 @@ public class PrenotazioniController {
             prenotazioni = veicolo.getPrenotazioni();
         }
 
+        //SEZIONE PAGING
+        int numVec = 0;
+        int pageNum = 0;
+        int recForPage = 0;
+        int diffPage = 0;
+        paramPaging = parametri.get("paging");
+        if(paramPaging != null){
+            try{
+                pageNum = Integer.parseInt(paramPaging.get(0));
+                recForPage = Integer.parseInt(selected);
+                diffPage = Integer.parseInt(paramPaging.get(1));
+
+                if(pageNum >= 1)
+                    pageNum+= diffPage;
+                else
+                    pageNum = 1;
+            } catch (NumberFormatException e){
+                pageNum = 0;
+                diffPage = 0;
+                recForPage = 10;
+            }
+        }
+        int realPage = (pageNum > 0) ? pageNum - 1 : 0;
+        pages = paging.setPages(realPage, numVec);
+
         model.addAttribute("prenotazioni", prenotazioni);
         model.addAttribute("title", "PAGINA PRENOTAZIONI");
+        model.addAttribute("pages", pages);
+
+        if(prenotazioni.isEmpty())
+            model.addAttribute("notFound", true);
 
         return "prenotazionipage";
     }
@@ -115,5 +145,25 @@ public class PrenotazioniController {
         prenotazioniService.InsertPrenotazione(prenotazione);
 
         return "redirect:/homepage/customerhomepage/parametri;paging=0,0?selected=10";
+    }
+
+    @GetMapping("/valida")
+    public String GetValidaPrenotazione(
+            @RequestParam(name = "idPrenotazione", required = true) String idPrenotazione,
+            @RequestParam(name = "modificaStato", required = true) String modificaStato,
+            Model model) {
+
+        PrenotazioneDto prenotazioneDto = prenotazioniService.SelById(Integer.parseInt(idPrenotazione));
+        if(modificaStato.equalsIgnoreCase("APPROVATO")){
+            prenotazioneDto.setStato("APPROVATO");
+        } else if(modificaStato.equalsIgnoreCase("DECLINATO")){
+            prenotazioneDto.setStato("DECLINATO");
+        } else {
+            model.addAttribute("error", "Stato non valido!");
+        }
+
+        prenotazioniService.InsertPrenotazione(prenotazioneDto);
+
+        return "redirect: /rentalcar/prenotazioni/visualizzaprenot/parametri;paging=0,0?selected=10&id="+prenotazioneDto.getIdUtente()+"&campoFiltro=ut";
     }
 }
