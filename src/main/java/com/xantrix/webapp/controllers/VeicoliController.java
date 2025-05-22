@@ -5,6 +5,7 @@ import com.xantrix.webapp.dtos.UtenteDto;
 import com.xantrix.webapp.dtos.VeicoloDto;
 import com.xantrix.webapp.services.VeicoliService;
 import com.xantrix.webapp.utils.Paging;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -21,15 +22,13 @@ import java.util.Map;
 @RequestMapping("/parcoauto")
 public class VeicoliController {
 
+    @Autowired
     private VeicoliService veicoliService;
+    @Autowired
     private Paging paging;
 
     List<PagingData> pages = new ArrayList<>();
 
-    private VeicoliController(VeicoliService veicoliService, Paging paging) {
-        this.veicoliService = veicoliService;
-        this.paging = paging;
-    }
 
     @GetMapping
     public String GetParcoAutoPage(

@@ -19,4 +19,7 @@ public interface UtentiService {
     public UtenteDto SelById(Integer id);
 
     public UtenteDto SelByEmail(String email);
+
+    public boolean EmailExists(String email, Integer idUtente);
+    public boolean EmailExists(String email);
 }

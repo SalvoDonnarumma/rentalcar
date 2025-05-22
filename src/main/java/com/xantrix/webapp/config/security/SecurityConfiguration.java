@@ -68,12 +68,12 @@ public class SecurityConfiguration {
         http
                 .authenticationProvider(getAuthenticationProvider())
                 .authorizeHttpRequests( (authorize) -> authorize
-                        .requestMatchers("/homepage/aggiungi/**","/homepage/elimina/**", "/homepage/modifica/**",
-                                       "/parcoauto/aggiungi/**", "/parcoauto/elimina/**", "/parcoauto/modifica/**",
+                        .requestMatchers("/homepage/elimina/**", "prenotazioni/visualizzaprenot/**","homepage/search/**",
+                                        "/parcoauto/elimina/**", "/parcoauto/modifica/**", "prenotazioni/valida",
                                       "/prenotazioni/approva")
                                   .hasRole("ADMIN")
-                              .requestMatchers("/homepage/**", "homepage/search/**",
-                                      "/parcoauto", "/parcoauto/search/**",
+                              .requestMatchers("/homepage/**", "homepage/profiloutente", "homepage/aggiungi/**",
+                                      "/parcoauto", "/parcoauto/search/**", "/homepage/modifica/**",
                                       "/prenotazioni/aggiungi/**", "prenotazioni/modifica/**", "prenotazioni/cancella/**")
                                     .authenticated()
                         .anyRequest().permitAll())

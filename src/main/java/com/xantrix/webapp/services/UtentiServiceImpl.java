@@ -88,6 +88,16 @@ public class UtentiServiceImpl implements UtentiService {
         return ConvertToDto(utente);
     }
 
+    @Override
+    public boolean EmailExists(String email, Integer idUtente) {
+        return utentiRepository.findByEmailAndIdUtenteNot(email, idUtente).isPresent();
+    }
+
+    @Override
+    public boolean EmailExists(String email) {
+        return utentiRepository.findByEmail(email).isPresent();
+    }
+
     private List<UtenteDto> ConvertToDto(List<Utente> utenti) {
         List<UtenteDto> utentiDtoList = utenti
                 .stream()

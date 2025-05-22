@@ -9,6 +9,7 @@ import com.xantrix.webapp.services.PrenotazioniService;
 import com.xantrix.webapp.services.UtentiService;
 import com.xantrix.webapp.services.VeicoliService;
 import com.xantrix.webapp.utils.Paging;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,19 +23,16 @@ import java.util.*;
 @RequestMapping("/prenotazioni")
 public class PrenotazioniController {
 
+    @Autowired
     private PrenotazioniService prenotazioniService;
+    @Autowired
     private Paging paging;
+    @Autowired
     private UtentiService utentiService;
+    @Autowired
     private VeicoliService veicoliService;
 
     List<PagingData> pages = new ArrayList<>();
-
-    private PrenotazioniController(PrenotazioniService prenotazioniService, Paging paging, UtentiService utentiService, VeicoliService veicoliService) {
-        this.prenotazioniService = prenotazioniService;
-        this.paging = paging;
-        this.utentiService = utentiService;
-        this.veicoliService = veicoliService;
-    }
 
     //parametri;paging=0,0?selected=10#
     @GetMapping("/visualizzaprenot/{parametri}")
