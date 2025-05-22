@@ -15,6 +15,10 @@
         <h2 class="content-title">Lista Prenotazioni del cliente: </h2>
     </div>
 
+    <div th:if="${errorStatus}" class="alert alert-danger">
+        <p>Lo stato inserito non è valido</p>
+    </div>
+
     <div class="card mb-4">
         <header class="card-header">
             <div class="row gx-3">
@@ -94,7 +98,7 @@
                         <!-- Tasto Previous -->
                         <li class="page-item" th:classappend="${pageNum <= 1} ? 'disabled'">
                             <a class="page-link"
-                               th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',-1?selected=' + ${recPage}+ '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}"
+                               th:href="@{'/prenotazioni/visualizzaprenot/parametri;paging=' + ${pageNum} + ',-1?selected=' + ${recPage}+ '&id='+${id}+'&campoFiltro=ut'}"
                                aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                                 <span class="sr-only">Precedente</span>
@@ -106,7 +110,7 @@
                             th:each="pagina : ${pages}"
                             th:classappend="${pagina.selected} ? 'active'">
                             <a  class="page-link"
-                                th:href="@{'/homepage/search/parametri;paging=' + ${pagina.pageNum} + ',0?selected=' + ${recPage} + '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}">
+                                th:href="@{'/prenotazioni/visualizzaprenot/parametri;paging=' + ${pageNum} + ',0?selected=' + ${recPage}+ '&id='+${id}+'&campoFiltro=ut'}">
                                 <span th:text="${pagina.pageNum}">1</span>
                             </a>
                         </li>
@@ -114,7 +118,7 @@
                         <!-- Tasto Next -->
                         <li class="page-item">
                             <a class="page-link"
-                               th:href="@{'/homepage/search/parametri;paging=' + ${pageNum} + ',1?selected=' + ${recPage}+ '&filtro='+${filtro}+'&campoFiltro='+${campoFiltro}}"
+                               th:href="@{'/prenotazioni/visualizzaprenot/parametri;paging=' + ${pageNum} + ',1?selected=' + ${recPage}+ '&id='+${id}+'&campoFiltro=ut'}"
                                aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                                 <span class="sr-only">Successivo</span>

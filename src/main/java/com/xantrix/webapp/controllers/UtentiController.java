@@ -74,7 +74,6 @@ public class UtentiController {
 
         //PARAMETRI PAGING
         List<String> paramPaging = parametri.get("paging");
-
         if(paramPaging != null){
             try{
                 pageNum = Integer.parseInt(paramPaging.get(0)); //Numero della pagina
@@ -198,8 +197,6 @@ public class UtentiController {
 
         int realPage = (pageNum > 0) ? pageNum - 1 : 0;
 
-        System.out.println(">>>>Data "+dataInit);
-
         List<PrenotazioneDto> prenotazioni = prenotazioniService.SelByIdUtente(utenteLogged.getId(), realPage, recForPage, dataInit, dataFin);
         if(!prenotazioni.isEmpty()){
             notFound = false;
@@ -210,7 +207,7 @@ public class UtentiController {
 
         model.addAttribute("title", "CUSTOMER HOMEPAGE");
         model.addAttribute("email", utenteLogged.getEmail());
-        model.addAttribute("pageNum", pageNum);
+        model.addAttribute("pageNum", realPage);
         model.addAttribute("recPage", recForPage);
         model.addAttribute("pages", pages);
         model.addAttribute("prenotazioni", prenotazioni);

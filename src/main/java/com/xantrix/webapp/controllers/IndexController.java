@@ -9,7 +9,7 @@ public class IndexController {
 
     @GetMapping(value="/")
     public String getWelcome(Model model) {
-        model.addAttribute("Intestazione", "Benvenuti nella root page della webapp Rental Car");
+        model.addAttribute("intestazione", "Benvenuti nella root page della webapp Rental Car");
         model.addAttribute("saluti", "Saluti, sono il progetto della Fase Due del tuo stage");
 
         return "index";

@@ -26,7 +26,6 @@ public class PrenotazioniController {
     private Paging paging;
     private UtentiService utentiService;
     private VeicoliService veicoliService;
-    private List<String> paramPaging;
 
     List<PagingData> pages = new ArrayList<>();
 
@@ -44,6 +43,7 @@ public class PrenotazioniController {
             @RequestParam(name= "id",required = true) Integer id,
             @RequestParam(name="campoFiltro",required = true) String campoFiltro,
             @RequestParam(name="selected", required  =false, defaultValue = "10") String selected,
+            @RequestParam(name="error", required = false, defaultValue = "false") Boolean error,
             Model model) {
 
         Set<PrenotazioneDto> prenotazioni = new HashSet<>();
@@ -63,11 +63,11 @@ public class PrenotazioniController {
         }
 
         //SEZIONE PAGING
-        int numVec = 0;
+        int numPrenot = 0;
         int pageNum = 0;
         int recForPage = 0;
         int diffPage = 0;
-        paramPaging = parametri.get("paging");
+        List<String> paramPaging = parametri.get("paging");
         if(paramPaging != null){
             try{
                 pageNum = Integer.parseInt(paramPaging.get(0));
@@ -85,11 +85,16 @@ public class PrenotazioniController {
             }
         }
         int realPage = (pageNum > 0) ? pageNum - 1 : 0;
-        pages = paging.setPages(realPage, numVec);
+        numPrenot = prenotazioni.size();
+        pages = paging.setPages(realPage, numPrenot);
 
         model.addAttribute("prenotazioni", prenotazioni);
         model.addAttribute("title", "PAGINA PRENOTAZIONI");
         model.addAttribute("pages", pages);
+        model.addAttribute("errorStatus", error);
+        model.addAttribute("pageNum", realPage);
+        model.addAttribute("recPage", recForPage);
+        model.addAttribute("id", Integer.toString(id));
 
         if(prenotazioni.isEmpty())
             model.addAttribute("notFound", true);
@@ -159,7 +164,7 @@ public class PrenotazioniController {
         } else if(modificaStato.equalsIgnoreCase("DECLINATO")){
             prenotazioneDto.setStato("DECLINATO");
         } else {
-            model.addAttribute("error", "Stato non valido!");
+            return "redirect: /rentalcar/prenotazioni/visualizzaprenot/parametri;paging=0,0?selected=10&id="+prenotazioneDto.getIdUtente()+"&campoFiltro=ut&error=true";
         }
 
         prenotazioniService.InsertPrenotazione(prenotazioneDto);

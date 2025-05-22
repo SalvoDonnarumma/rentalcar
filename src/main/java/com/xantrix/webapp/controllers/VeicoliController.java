@@ -72,11 +72,10 @@ public class VeicoliController {
             }
         }
         int realPage = (pageNum > 0) ? pageNum - 1 : 0;
-        pages = paging.setPages(pageNum, numVec);
-
 
         List<VeicoloDto> veicoli = veicoliService.SearchVeicoli(filtro, campoFiltro, realPage, recForPage);
         numVec = veicoliService.NumRecords();
+        pages = paging.setPages(realPage, numVec);
 
         if(!veicoli.isEmpty()){
              notFound = false;
