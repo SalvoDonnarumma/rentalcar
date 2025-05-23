@@ -92,7 +92,7 @@
                   </a>
                   <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#">Dettaglio</a></li>
-                    <li><a class="dropdown-item" href="#">Visualizza prenotazioni</a></li>
+                    <li><a class="dropdown-item" th:href="@{'/prenotazioni/visualizzaprenot/parametri;paging=0,0?selected=10&id='+${veicolo.getId()}+'&campoFiltro=vec'}">Visualizza prenotazioni</a></li>
                     <li><a class="dropdown-item" th:href="@{'/parcoauto/modifica/' + ${veicolo.getTarga()}}">Modifica</a></li>
                   </ul>
                 </div>

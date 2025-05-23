@@ -52,12 +52,14 @@ public class PrenotazioniController {
             System.out.println("Lista di prenotazioni che interessano l'utente: "+utente.getEmail());
             utente.getPrenotazioni().forEach(System.out::println);
             prenotazioni = utente.getPrenotazioni();
+            model.addAttribute("tableTitle", "Lista prenotazione del costumer "+utente.getEmail());
         }
         else {
             veicolo = veicoliService.SelById(id);
             System.out.println("Lista di prenotazioni che interessano il veicolo: "+veicolo.getTarga());
             veicolo.getPrenotazioni().forEach(System.out::println);
             prenotazioni = veicolo.getPrenotazioni();
+            model.addAttribute("tableTitle", "Lista prenotazione del veicolo "+veicolo.getTarga());
         }
 
         //SEZIONE PAGING
@@ -93,6 +95,7 @@ public class PrenotazioniController {
         model.addAttribute("pageNum", realPage);
         model.addAttribute("recPage", recForPage);
         model.addAttribute("id", Integer.toString(id));
+        model.addAttribute("campoFiltro", campoFiltro);
 
         if(prenotazioni.isEmpty())
             model.addAttribute("notFound", true);

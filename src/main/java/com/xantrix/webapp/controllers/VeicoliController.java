@@ -29,7 +29,6 @@ public class VeicoliController {
 
     List<PagingData> pages = new ArrayList<>();
 
-
     @GetMapping
     public String GetParcoAutoPage(
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
@@ -143,5 +142,4 @@ public class VeicoliController {
 
         return "gestveicoli";
     }
-
 }

@@ -12,7 +12,7 @@
 <section class="content-main">
 
     <div class="content-header">
-        <h2 class="content-title">Lista Prenotazioni del cliente: </h2>
+        <h2 class="content-title" th:text="${tableTitle}">Lista Prenotazioni: </h2>
     </div>
 
     <div th:if="${errorStatus}" class="alert alert-danger">
@@ -88,7 +88,7 @@
                 </table>
 
                 <div th:if="${notFound}" class="alert alert-danger" role="alert">
-                    Utente/i NON presente/i in anagrafica!
+                    Non sono presenti prenotazioni per questa entità!
                 </div>
 
                 <!-- Inizio Blocco Paginazione -->
@@ -132,6 +132,9 @@
         </div>
     </div>
 
+    <section th:text="${id}"></section>
+    <section th:text="${campoFiltro}"></section>
+
 </section>
 
 <script>
@@ -141,7 +144,9 @@
 
     function refreshPage() {
         var selectedValue = document.getElementById("righe").value;
-        window.location.href = "?filtro=[[${filtro}]]&selected=" + selectedValue;
+        var id = /*[[${id}]]*/"default";
+        var campoFiltro = /*[[${campoFiltro}]]*/"default";
+        window.location.href = "?selected=" + selectedValue + "&id=" + id + "&campoFiltro=" + campoFiltro; //il valore default serve per il JS in modo che non rompe il codice nel caso Thymeleaf non processa l'espressione
     }
 </script>
 

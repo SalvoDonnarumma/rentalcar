@@ -41,4 +41,5 @@ public class Veicolo {
     public void addPrenotazione(Prenotazione prenotazione) {
         prenotazioni.add(prenotazione);
     }
+
 }
