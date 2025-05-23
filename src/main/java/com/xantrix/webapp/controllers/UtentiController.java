@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -255,6 +256,8 @@ public class UtentiController {
         if(!prenotazioni.isEmpty()){
             notFound = false;
         }
+
+        prenotazioniService.AggiornaStatoPrenotazione(new HashSet<>(prenotazioni));
 
         numCos = prenotazioni.size();
         pages = paging.setPages(pageNum, numCos);

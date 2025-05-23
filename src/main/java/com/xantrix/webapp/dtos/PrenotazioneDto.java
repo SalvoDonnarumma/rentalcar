@@ -34,6 +34,7 @@ public class PrenotazioneDto {
                 ", utenteId=" + (utente != null ? utente.getId() : "null") +
                 ", veicoloId=" + (veicolo != null ? veicolo.getId() : "null") +
                 ", stato=" + stato +
+                ", IsDataValida=" + isDataValida +
                 '}';
     }
 }

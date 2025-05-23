@@ -30,10 +30,10 @@
           <form class="form-inline my-2 my.lg-0" id="search" method="GET"
                 th:action="@{'/homepage/customerhomepage/parametri;paging=' + ${pageNum} + ',0?selected=' + ${recPage}+ '&datainit='+${dataInit}+'&datafin='+${dataFin}}">
             <label for="dataInizio" class="form-label mt-2">Data inizio:</label>
-            <input type="date" id="dataInizio" name="dataInizio" th:value="${dataInizio}" class="form-control"/>
+            <input type="date" id="dataInizio" name="dataInizio" th:value="${dataInit}" class="form-control"/>
 
             <label for="dataFine" class="form-label mt-2">Data fine:</label>
-            <input type="date" id="dataFine" name="dataFine" th:value="${dataFine}" class="form-control"/>
+            <input type="date" id="dataFine" name="dataFine" th:value="${dataFin}" class="form-control"/>
 
             <button type="submit" class="btn btn-primary mt-2">Cerca per date</button>
           </form>
@@ -86,15 +86,29 @@
             <td class="tbl-string" th:text="${pren.getStato()}"></td>
 
             <td class="text-end">
-              <a th:href="@{'/prenotazioni/modifica/' + ${pren.getIdPrenotazione()}}"
+              <a th:if="${pren.isDataValida}"
+                 th:href="@{'/prenotazioni/modifica/' + ${pren.getIdPrenotazione()}}"
                  class="btn btn-light text-bg-primary">
                 Modifica
               </a>
-              <a th:href="@{'/prenotazioni/elimina/' + ${pren.getIdPrenotazione()}}"
+              <a th:unless="${pren.isDataValida}"
+                 class="btn btn-light text-bg-primary disabled text-opacity-50"
+                 style="pointer-events: none; cursor: not-allowed;">
+                Modifica
+              </a>
+
+              <a th:if="${pren.isDataValida}"
+                 th:href="@{'/prenotazioni/elimina/' + ${pren.getIdPrenotazione()}}"
                  class="btn btn-light text-bg-primary">
                 Cancella
               </a>
+              <a th:unless="${pren.isDataValida}"
+                 class="btn btn-light text-bg-primary disabled text-opacity-50"
+                 style="pointer-events: none; cursor: not-allowed;">
+                Cancella
+              </a>
             </td>
+
           </tr>
           </tbody>
         </table>

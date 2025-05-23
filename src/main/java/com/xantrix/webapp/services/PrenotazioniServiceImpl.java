@@ -138,7 +138,7 @@ public class PrenotazioniServiceImpl implements PrenotazioniService {
                 InsertPrenotazione(p);
             }
 
-            p.setIsDataValida(dataInizio.isAfter(limite) && p.getStato().equals("IN ATTESA"));
+            p.setIsDataValida(dataInizio.isAfter(limite));
         }
     }
 
