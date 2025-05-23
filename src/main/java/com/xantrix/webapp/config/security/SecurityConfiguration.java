@@ -74,7 +74,7 @@ public class SecurityConfiguration {
                                   .hasRole("ADMIN")
                               .requestMatchers("/homepage/**", "homepage/profiloutente", "homepage/aggiungi/**",
                                       "/parcoauto", "/parcoauto/search/**", "/homepage/modifica/**",
-                                      "/prenotazioni/aggiungi/**", "prenotazioni/modifica/**", "prenotazioni/cancella/**")
+                                      "/prenotazioni/aggiungi/**", "/prenotazioni/modifica/**", "/prenotazioni/elimina/**")
                                     .authenticated()
                         .anyRequest().permitAll())
                 .formLogin(form -> form

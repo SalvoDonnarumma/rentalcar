@@ -58,7 +58,6 @@ public class UtentiController {
         return "login";
     }
 
-    //http://localhost:8080/alphashop/articoli/cerca/parametri;paging=0,1?filtro=acqua&selected=10
     @GetMapping(value="/search/{parametri}")
     public String GetCostumersWithPar(
             @MatrixVariable(pathVar = "parametri") Map<String, List<String>> parametri,
@@ -163,7 +162,6 @@ public class UtentiController {
 
             //Controlla email valida
             if(utentiService.EmailExists(utente.getEmail(), utente.getId())){
-                System.out.println("Email Already Exists");
                 redirectAttributes.addFlashAttribute("duplicateEmail", true);
                 return "redirect:/homepage/modifica/"+utente.getId();
             }
@@ -217,6 +215,8 @@ public class UtentiController {
             @RequestParam(name = "selected", required = false, defaultValue = "10") String selected,
             @RequestParam(name = "dataInizio", required = false, defaultValue = "") String dataInit,
             @RequestParam(name = "dataFine", required = false, defaultValue = "") String dataFin,
+            @RequestParam(name = "errorDate", required = false, defaultValue = "false") boolean errorDate,
+            @RequestParam(name = "confirmDelete", required = false, defaultValue = "false") boolean confirmDelete,
             Model model){
 
         String email = authentication.getName();
@@ -267,6 +267,8 @@ public class UtentiController {
         model.addAttribute("prenotazioni", prenotazioni);
         model.addAttribute("dataInit", dataInit);
         model.addAttribute("dataFin", dataFin);
+        model.addAttribute("errorDate", errorDate);
+        model.addAttribute("confirmDelete", confirmDelete);
 
         return "costumerhomepage";
     }

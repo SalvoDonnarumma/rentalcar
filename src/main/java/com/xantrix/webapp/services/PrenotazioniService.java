@@ -13,4 +13,6 @@ public interface PrenotazioniService {
     public List<PrenotazioneDto> SelByVeicolo(Veicolo veicolo, int pageNum, int recForPage);
 
     public void InsertPrenotazione(PrenotazioneDto prenotazione);
+
+    void EliminaPrenotazione(Integer id);
 }

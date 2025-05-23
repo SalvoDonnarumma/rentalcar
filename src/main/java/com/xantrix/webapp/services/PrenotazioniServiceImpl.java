@@ -1,9 +1,12 @@
 package com.xantrix.webapp.services;
 
 import com.xantrix.webapp.dtos.PrenotazioneDto;
+import com.xantrix.webapp.dtos.VeicoloDto;
 import com.xantrix.webapp.entities.Prenotazione;
+import com.xantrix.webapp.entities.Utente;
 import com.xantrix.webapp.entities.Veicolo;
 import com.xantrix.webapp.repository.PrenotazioniRepository;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,9 +87,25 @@ public class PrenotazioniServiceImpl implements PrenotazioniService {
         prenotazioniRepository.save(ConvertFromDto(prenotazione));
     }
 
+    @Override
+    @Transactional
+    public void EliminaPrenotazione(Integer id) {
+        Prenotazione prenotazione = prenotazioniRepository.findById(id).get();
+
+        Utente utente = prenotazione.getUtente();
+        if(utente != null){
+            utente.getPrenotazioni().remove(prenotazione);
+        }
+
+        Veicolo veicolo = prenotazione.getVeicolo();
+        if(veicolo != null){
+            veicolo.getPrenotazioni().remove(prenotazione);
+        }
+
+        prenotazioniRepository.delete(prenotazione);
+    }
 
     private List<PrenotazioneDto> ConvertToDto(List<Prenotazione> prenotazioni) {
-
         return prenotazioni
                 .stream()
                 .map(source -> modelMapper.map(source, PrenotazioneDto.class))

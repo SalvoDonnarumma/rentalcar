@@ -53,8 +53,6 @@ public class VeicoliServiceImpl implements VeicoliService {
     @Override
     public void DelVeicoloByTarga(String targa) {
         Veicolo daCancellare = ConvertFromDto(SelByTarga(targa));
-
-        System.out.println(daCancellare);
         veicoliRepository.delete(daCancellare);
     }
 

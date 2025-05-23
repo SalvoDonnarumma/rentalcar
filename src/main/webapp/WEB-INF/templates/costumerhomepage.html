@@ -22,6 +22,7 @@
   </div>
 
   <div class="card mb-4">
+
     <header class="card-header">
       <div class="row gx-3">
 
@@ -52,6 +53,14 @@
     </header>
 
     <div class="card-body">
+      <div th:if="${errorDate}" class="alert alert-danger">
+        <p>Non è possibile modificare o cancellare la prenotazione poiché la data di inizio è vicina
+          alla data odierna!</p>
+      </div>
+
+      <div th:if="${confirmDelete}" class="alert alert-success">
+        <p>Prenotazione cancellata con successo!</p>
+      </div>
       <div class="table-responsive">
         <table class="table table-hover">
           <thead>
@@ -81,7 +90,7 @@
                  class="btn btn-light text-bg-primary">
                 Modifica
               </a>
-              <a th:href="@{'/prenotazioni/cancella/' + ${pren.getIdPrenotazione()}}"
+              <a th:href="@{'/prenotazioni/elimina/' + ${pren.getIdPrenotazione()}}"
                  class="btn btn-light text-bg-primary">
                 Cancella
               </a>
@@ -144,7 +153,7 @@
 
   function refreshPage() {
     var selectedValue = document.getElementById("righe").value;
-    window.location.href = "?filtro=[[${filtro}]]&selected=" + selectedValue;
+    window.location.href = "?selected=" + selectedValue;
   }
 </script>
 

@@ -4,7 +4,6 @@ import com.xantrix.webapp.dtos.PagingData;
 import com.xantrix.webapp.dtos.PrenotazioneDto;
 import com.xantrix.webapp.dtos.UtenteDto;
 import com.xantrix.webapp.dtos.VeicoloDto;
-import com.xantrix.webapp.entities.Veicolo;
 import com.xantrix.webapp.services.PrenotazioniService;
 import com.xantrix.webapp.services.UtentiService;
 import com.xantrix.webapp.services.VeicoliService;
@@ -16,7 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 @Controller
@@ -108,6 +110,10 @@ public class PrenotazioniController {
             @PathVariable("idPrenotazione") Integer id,
             Model model) {
 
+        boolean errorDate = IsPrenotazioneInvalid(id);
+        if(!errorDate)
+            return "redirect:/homepage/customerhomepage/parametri;paging=0,0?selected=10&errorDate=true";
+
         PrenotazioneDto prenotazione= prenotazioniService.SelById(id);
         VeicoloDto veicolo = veicoliService.SelById(prenotazione.getIdVeicolo());
         UtenteDto utente = utentiService.SelById(prenotazione.getIdUtente());
@@ -125,10 +131,9 @@ public class PrenotazioniController {
             @PathVariable("idVeicolo") Integer idVeicolo,
             Model model) {
 
-        VeicoloDto veicolo = veicoliService.SelById(idVeicolo);
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UtenteDto utente = utentiService.SelByEmail(authentication.getName());
+        VeicoloDto veicolo = veicoliService.SelById(idVeicolo);
 
         model.addAttribute("title", "PAGINA MODIFICA PRENOTAZIONE");
         model.addAttribute("dativeicolo", veicolo);
@@ -172,4 +177,27 @@ public class PrenotazioniController {
 
         return "redirect: /rentalcar/prenotazioni/visualizzaprenot/parametri;paging=0,0?selected=10&id="+prenotazioneDto.getIdUtente()+"&campoFiltro=ut";
     }
+
+    @GetMapping("/elimina/{id}")
+    public String eliminaPrenotazione(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes) {
+        boolean errorDate = IsPrenotazioneInvalid(id);
+        boolean confirmDelete = false;
+
+        if(errorDate) {
+            prenotazioniService.EliminaPrenotazione(id);
+            confirmDelete = true;
+        }
+
+        return "redirect:/homepage/customerhomepage/parametri;paging=0,0?selected=10&errorDate="+!errorDate+"&confirmDelete="+confirmDelete;
+    }
+
+    private boolean IsPrenotazioneInvalid(Integer id){
+        PrenotazioneDto prenotazione = prenotazioniService.SelById(id);
+        Date dataP = prenotazione.getDataInizio();
+        LocalDate dataPrenotazione = dataP.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate dataOdierna = LocalDate.now();
+
+        return dataPrenotazione.isAfter(dataOdierna.plusDays(2));
+    }
+
 }

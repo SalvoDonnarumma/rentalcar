@@ -132,21 +132,18 @@
         </div>
     </div>
 
-    <section th:text="${id}"></section>
-    <section th:text="${campoFiltro}"></section>
-
 </section>
 
-<script>
+<script th:inline="javascript"> //Permette di usare Thymeleaf inline JavaScript expression
     document.getElementById("filtroInput").addEventListener("click", function () {
         this.select();
     });
 
     function refreshPage() {
         var selectedValue = document.getElementById("righe").value;
-        var id = /*[[${id}]]*/"default";
+        var id = /*[[${id}]]*/"0"; ////il valore default serve per il JS in modo che non rompe il codice nel caso Thymeleaf non processa l'espressione
         var campoFiltro = /*[[${campoFiltro}]]*/"default";
-        window.location.href = "?selected=" + selectedValue + "&id=" + id + "&campoFiltro=" + campoFiltro; //il valore default serve per il JS in modo che non rompe il codice nel caso Thymeleaf non processa l'espressione
+        window.location.href = "?selected=" + selectedValue + "&id=" + id + "&campoFiltro=" + campoFiltro;
     }
 </script>
 

@@ -69,14 +69,13 @@
           </thead>
           <tbody>
           <tr th:each="veicolo : ${veicoli}">
-            <td class="tbl-string" th:text="${veicolo.modello}"></td>
-            <td class="tbl-string" th:text="${veicolo.casaProduttrice}"></td>
-            <td class="tbl-string" th:text="${veicolo.annoImmatricolazione}"></td>
-            <td class="tbl-string" th:text="${veicolo.targa}"></td>
-            <td class="tbl-string" th:text="${veicolo.tipologia}"></td>
+            <td class="tbl-string" th:text="${veicolo.getModello()}"></td>
+            <td class="tbl-string" th:text="${veicolo.getCasaProduttrice()}"></td>
+            <td class="tbl-string" th:text="${veicolo.getAnnoImmatricolazione()}"></td>
+            <td class="tbl-string" th:text="${veicolo.getTarga()}"></td>
+            <td class="tbl-string" th:text="${veicolo.getTipologia()}"></td>
 
             <td class="text-end">
-
               <!-- Solo per ADMIN -->
               <th:block th:if="${isAdmin}">
                 <a th:href="@{'/parcoauto/elimina/' + ${veicolo.getTarga()}}"
@@ -86,12 +85,11 @@
                 </a>
 
                 <!-- DropDown Menu -->
-                <div class="dropdown d-inline">
+                <div class="dropdown">
                   <a href="#" data-bs-toggle="dropdown" class="btn btn-light">
                     <i class="material-icons md-more_horiz"></i>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Dettaglio</a></li>
                     <li><a class="dropdown-item" th:href="@{'/prenotazioni/visualizzaprenot/parametri;paging=0,0?selected=10&id='+${veicolo.getId()}+'&campoFiltro=vec'}">Visualizza prenotazioni</a></li>
                     <li><a class="dropdown-item" th:href="@{'/parcoauto/modifica/' + ${veicolo.getTarga()}}">Modifica</a></li>
                   </ul>

@@ -43,6 +43,8 @@ public class Prenotazione {
                 ", utenteId=" + (utente != null ? utente.getIdUtente() : "null") +
                 ", veicoloId=" + (veicolo != null ? veicolo.getIdVeicolo() : "null") +
                 ", stato=" + stato +
+                ", dataInizio=" + dataInizio +
+                ", dataFine=" + dataFine +
                 '}';
     }
 
