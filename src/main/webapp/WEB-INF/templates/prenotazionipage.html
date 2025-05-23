@@ -61,27 +61,30 @@
                         <td class="tbl-string" th:text="${pren.getStato()}"></td>
 
                         <td class="text-end">
-                            <a th:if="${pren.getStato() == 'IN ATTESA'}"
-                               th:href="@{'/prenotazioni/valida?idPrenotazione=' + ${pren.getIdPrenotazione()} + '&modificaStato=DECLINATO'}"
+
+                            <a th:if="${pren.isDataValida}"
+                               th:href="@{'/prenotazioni/valida?idPrenotazione=' + ${pren.idPrenotazione} + '&modificaStato=DECLINATO'}"
                                class="btn btn-light text-danger">
                                 Declina
                             </a>
-                            <a th:unless="${pren.getStato() == 'IN ATTESA'}"
+                            <a th:unless="${pren.isDataValida}"
                                class="btn btn-light text-danger disabled text-opacity-50"
                                style="pointer-events: none; cursor: not-allowed;">
                                 Declina
                             </a>
 
-                            <a th:if="${pren.getStato() == 'IN ATTESA'}"
-                               th:href="@{'/prenotazioni/valida?idPrenotazione=' + ${pren.getIdPrenotazione()} + '&modificaStato=APPROVATO'}"
+                            <!-- Approva -->
+                            <a th:if="${pren.isDataValida}"
+                               th:href="@{'/prenotazioni/valida?idPrenotazione=' + ${pren.idPrenotazione} + '&modificaStato=APPROVATO'}"
                                class="btn btn-light text-bg-success">
                                 Approva
                             </a>
-                            <a th:unless="${pren.getStato() == 'IN ATTESA'}"
+                            <a th:unless="${pren.isDataValida}"
                                class="btn btn-light text-bg-success disabled text-opacity-50"
                                style="pointer-events: none; cursor: not-allowed;">
                                 Approva
                             </a>
+
                         </td>
                     </tr>
                     </tbody>

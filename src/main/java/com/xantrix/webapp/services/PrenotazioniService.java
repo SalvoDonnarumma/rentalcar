@@ -3,7 +3,10 @@ package com.xantrix.webapp.services;
 import com.xantrix.webapp.dtos.PrenotazioneDto;
 import com.xantrix.webapp.entities.Veicolo;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.Set;
 
 public interface PrenotazioniService {
 
@@ -15,4 +18,8 @@ public interface PrenotazioniService {
     public void InsertPrenotazione(PrenotazioneDto prenotazione);
 
     void EliminaPrenotazione(Integer id);
+    public void AggiornaStatoPrenotazione(Set<PrenotazioneDto> prenotazioni);
+    public LocalDate ConvertDateToLocalDate(java.util.Date data);
+    public boolean IsPrenotazioneInvalid(Integer id);
+    public boolean IsPrenotazioneInvalid(java.util.Date dataInizio);
 }

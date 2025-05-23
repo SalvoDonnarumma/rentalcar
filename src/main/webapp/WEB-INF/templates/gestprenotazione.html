@@ -37,18 +37,20 @@
           <!-- Id Prenotazione-->
           <input type="hidden" th:field="*{idPrenotazione}" />
 
+          <div th:if="${errorDate}" class="alert alert-danger">
+            <p>Registrazione prenotazione fallita! Data non valida!</p>
+          </div>
+
           <!-- Data Inizio -->
           <fieldset class="col-sm-6 mb-3">
             <label for="dataInizio" class="form-label">Data Inizio:</label>
-            <input type="date" id="dataInizio" th:field="*{dataInizio}" class="form-control" placeholder=""/>
-            <div class="text-danger" th:if="${#fields.hasErrors('dataInizio')}" th:errors="*{dataInizio}"></div>
+            <input type="date" id="dataInizio" th:attr="min=${dataOdierna}" th:field="*{dataInizio}" class="form-control" placeholder=""/>
           </fieldset>
 
           <!-- Data Fine -->
           <fieldset class="col-sm-6 mb-3">
             <label for="dataFine" class="form-label">Data Fine:</label>
-            <input type="date" id="dataFine" th:field="*{dataFine}" class="form-control" placeholder=""/>
-            <div class="text-danger" th:if="${#fields.hasErrors('dataInizio')}" th:errors="*{dataFine}"></div>
+            <input type="date" id="dataFine" th:attr="min=${dataOdierna}" th:field="*{dataFine}" class="form-control" placeholder=""/>
           </fieldset>
 
           <!-- Stato -->

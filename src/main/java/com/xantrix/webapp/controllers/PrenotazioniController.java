@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/prenotazioni")
@@ -51,18 +52,21 @@ public class PrenotazioniController {
         VeicoloDto veicolo = null;
         if(campoFiltro.equalsIgnoreCase("ut")) {
             utente = utentiService.SelById(id);
-            System.out.println("Lista di prenotazioni che interessano l'utente: "+utente.getEmail());
-            utente.getPrenotazioni().forEach(System.out::println);
             prenotazioni = utente.getPrenotazioni();
             model.addAttribute("tableTitle", "Lista prenotazione del costumer "+utente.getEmail());
         }
         else {
             veicolo = veicoliService.SelById(id);
-            System.out.println("Lista di prenotazioni che interessano il veicolo: "+veicolo.getTarga());
-            veicolo.getPrenotazioni().forEach(System.out::println);
             prenotazioni = veicolo.getPrenotazioni();
             model.addAttribute("tableTitle", "Lista prenotazione del veicolo "+veicolo.getTarga());
         }
+
+        prenotazioniService.AggiornaStatoPrenotazione(prenotazioni);
+
+        List<PrenotazioneDto> listaPrenotazioni = new ArrayList<>(prenotazioni);
+        listaPrenotazioni = prenotazioni.stream()
+                .sorted(Comparator.comparing(PrenotazioneDto::getIdPrenotazione))
+                .toList();
 
         //SEZIONE PAGING
         int numPrenot = 0;
@@ -90,11 +94,11 @@ public class PrenotazioniController {
         numPrenot = prenotazioni.size();
         pages = paging.setPages(realPage, numPrenot);
 
-        model.addAttribute("prenotazioni", prenotazioni);
+        model.addAttribute("prenotazioni", listaPrenotazioni);
         model.addAttribute("title", "PAGINA PRENOTAZIONI");
         model.addAttribute("pages", pages);
         model.addAttribute("errorStatus", error);
-        model.addAttribute("pageNum", realPage);
+        model.addAttribute("pageNum", pageNum);
         model.addAttribute("recPage", recForPage);
         model.addAttribute("id", Integer.toString(id));
         model.addAttribute("campoFiltro", campoFiltro);
@@ -108,10 +112,10 @@ public class PrenotazioniController {
     @GetMapping("/modifica/{idPrenotazione}")
     public String GetModificaPrenotazione(
             @PathVariable("idPrenotazione") Integer id,
+            @RequestParam(name = "errorDate", required = false) Boolean errorDate,
             Model model) {
 
-        boolean errorDate = IsPrenotazioneInvalid(id);
-        if(!errorDate)
+        if(prenotazioniService.IsPrenotazioneInvalid(id))
             return "redirect:/homepage/customerhomepage/parametri;paging=0,0?selected=10&errorDate=true";
 
         PrenotazioneDto prenotazione= prenotazioniService.SelById(id);
@@ -122,6 +126,8 @@ public class PrenotazioniController {
         model.addAttribute("title", "PAGINA MODIFICA PRENOTAZIONE");
         model.addAttribute("dativeicolo", veicolo);
         model.addAttribute("datiutente", utente);
+        model.addAttribute("dataOdierna", LocalDate.now().plusDays(3));
+        model.addAttribute("errorDate", errorDate);
 
         return "gestprenotazione";
     }
@@ -129,6 +135,7 @@ public class PrenotazioniController {
     @GetMapping("/aggiungi/{idVeicolo}")
     public String GetAggiungiPrenotazione(
             @PathVariable("idVeicolo") Integer idVeicolo,
+            @RequestParam(name = "errorDate", required = false) Boolean errorDate,
             Model model) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -139,16 +146,35 @@ public class PrenotazioniController {
         model.addAttribute("dativeicolo", veicolo);
         model.addAttribute("datiutente", utente);
         model.addAttribute("datiprenotazione", new PrenotazioneDto());
+        model.addAttribute("dataOdierna", LocalDate.now().plusDays(2));
+        model.addAttribute("errorDate", errorDate);
 
         return "gestprenotazione";
     }
+
 
     @PostMapping("/aggiungi")
     public String PostAggiungiPrenotazione(
             @ModelAttribute("dativec") PrenotazioneDto prenotazione,
             @RequestParam(name="idVeicolo", required=true) Integer idVeicolo,
             @RequestParam(name="idUtente", required=true) Integer idUtente,
-            BindingResult result){
+            BindingResult result, RedirectAttributes redirectAttributes){
+
+        if(prenotazioniService.IsPrenotazioneInvalid(prenotazione.getDataInizio())) {
+            redirectAttributes.addAttribute("errorDate", true);
+            if(prenotazione.getIdPrenotazione()==null)
+                return "redirect: /rentalcar/prenotazioni/aggiungi/" + idVeicolo;
+            else
+                return "redirect: /rentalcar/prenotazioni/modifica/" + prenotazione.getIdPrenotazione();
+        }
+
+        if(prenotazione.getDataInizio().after(prenotazione.getDataFine())) {
+            redirectAttributes.addAttribute("errorDate", true);
+            if(prenotazione.getIdPrenotazione()==null)
+                return "redirect: /rentalcar/prenotazioni/aggiungi/" + idVeicolo;
+            else
+                return "redirect: /rentalcar/prenotazioni/modifica/" + prenotazione.getIdPrenotazione();
+        }
 
         prenotazione.setIdVeicolo(idVeicolo);
         prenotazione.setIdUtente(idUtente);
@@ -180,24 +206,10 @@ public class PrenotazioniController {
 
     @GetMapping("/elimina/{id}")
     public String eliminaPrenotazione(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes) {
-        boolean errorDate = IsPrenotazioneInvalid(id);
-        boolean confirmDelete = false;
+        if(prenotazioniService.IsPrenotazioneInvalid(id))
+            return "redirect:/homepage/customerhomepage/parametri;paging=0,0?selected=10&errorDate=true&confirmDelete=false";
 
-        if(errorDate) {
-            prenotazioniService.EliminaPrenotazione(id);
-            confirmDelete = true;
-        }
-
-        return "redirect:/homepage/customerhomepage/parametri;paging=0,0?selected=10&errorDate="+!errorDate+"&confirmDelete="+confirmDelete;
+        prenotazioniService.EliminaPrenotazione(id);
+        return "redirect:/homepage/customerhomepage/parametri;paging=0,0?selected=10&errorDate=false&confirmDelete=true";
     }
-
-    private boolean IsPrenotazioneInvalid(Integer id){
-        PrenotazioneDto prenotazione = prenotazioniService.SelById(id);
-        Date dataP = prenotazione.getDataInizio();
-        LocalDate dataPrenotazione = dataP.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate dataOdierna = LocalDate.now();
-
-        return dataPrenotazione.isAfter(dataOdierna.plusDays(2));
-    }
-
 }

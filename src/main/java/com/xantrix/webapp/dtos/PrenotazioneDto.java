@@ -25,6 +25,8 @@ public class PrenotazioneDto {
     private UtenteDto utente;
     private VeicoloDto veicolo;
 
+    private Boolean isDataValida;
+
     @Override
     public String toString() {
         return "Prenotazione{" +

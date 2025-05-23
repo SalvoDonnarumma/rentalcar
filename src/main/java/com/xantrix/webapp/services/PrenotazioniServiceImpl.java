@@ -20,6 +20,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -126,5 +127,38 @@ public class PrenotazioniServiceImpl implements PrenotazioniService {
             prenotazione = modelMapper.map(prenotazioneDto, Prenotazione.class);
         }
         return prenotazione;
+    }
+
+    public void AggiornaStatoPrenotazione(Set<PrenotazioneDto> prenotazioni){
+        LocalDate limite = LocalDate.now().plusDays(2);
+        for (PrenotazioneDto p : prenotazioni) {
+            LocalDate dataInizio = ConvertDateToLocalDate(p.getDataInizio());
+            if (!dataInizio.isAfter(limite) && p.getStato().equals("IN ATTESA")) {
+                p.setStato("DECLINATO");
+                InsertPrenotazione(p);
+            }
+
+            p.setIsDataValida(dataInizio.isAfter(limite) && p.getStato().equals("IN ATTESA"));
+        }
+    }
+
+    public LocalDate ConvertDateToLocalDate(java.util.Date data) {
+        return data.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    public boolean IsPrenotazioneInvalid(Integer id){
+        PrenotazioneDto prenotazione = SelById(id);
+        java.util.Date dataP = prenotazione.getDataInizio();
+        LocalDate dataPrenotazione = ConvertDateToLocalDate(dataP);
+        LocalDate dataOdierna = LocalDate.now();
+
+        return !dataPrenotazione.isAfter(dataOdierna.plusDays(2));
+    }
+
+    public boolean IsPrenotazioneInvalid(java.util.Date dataInizio){
+        LocalDate dataPrenotazione = ConvertDateToLocalDate(dataInizio);
+        LocalDate dataOdierna = LocalDate.now();
+
+        return !dataPrenotazione.isAfter(dataOdierna.plusDays(2));
     }
 }
