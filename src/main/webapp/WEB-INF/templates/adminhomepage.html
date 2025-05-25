@@ -74,7 +74,11 @@
                         <td class="tbl-string" th:text="${user.ruolo}"></td>
 
                         <td class="text-end">
-                            <a th:href="@{'/homepage/elimina/'+${user.id}}" class="btn btn-light text-danger">Elimina</a>
+                            <a th:href="@{'/homepage/elimina/'+${user.id}}"
+                               class="btn btn-light text-danger"
+                               onclick="return confirm('Sei sicuro di voler cancellare questo utente?');">
+                               Elimina
+                            </a>
 
                             <!-- DropDown Menu -->
                             <div class="dropdown">

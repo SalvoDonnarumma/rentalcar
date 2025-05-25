@@ -4,7 +4,6 @@ import com.xantrix.webapp.dtos.PrenotazioneDto;
 import com.xantrix.webapp.entities.Veicolo;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Set;
 
@@ -22,4 +21,5 @@ public interface PrenotazioniService {
     public LocalDate ConvertDateToLocalDate(java.util.Date data);
     public boolean IsPrenotazioneInvalid(Integer id);
     public boolean IsPrenotazioneInvalid(java.util.Date dataInizio);
+    public boolean IsPrenotazioneFromThePast(Integer id);
 }

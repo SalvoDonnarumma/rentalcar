@@ -96,15 +96,9 @@
                  style="pointer-events: none; cursor: not-allowed;">
                 Modifica
               </a>
-
-              <a th:if="${pren.isDataValida}"
-                 th:href="@{'/prenotazioni/elimina/' + ${pren.getIdPrenotazione()}}"
-                 class="btn btn-light text-bg-primary">
-                Cancella
-              </a>
-              <a th:unless="${pren.isDataValida}"
-                 class="btn btn-light text-bg-primary disabled text-opacity-50"
-                 style="pointer-events: none; cursor: not-allowed;">
+              <a th:href="@{'/prenotazioni/elimina/' + ${pren.getIdPrenotazione()}}"
+                 class="btn btn-light text-danger"
+                 onclick="return confirm('Sei sicuro di voler cancellare la prenotazione?');">
                 Cancella
               </a>
             </td>

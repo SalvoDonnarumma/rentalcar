@@ -16,7 +16,7 @@ import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.xantrix.webapp")
+@ComponentScan(basePackages = { "com.xantrix.webapp.services", "com.xantrix.webapp"})
 @PropertySource(value = "classpath:application.properties")
 public class WebMvcConfig implements WebMvcConfigurer {
 

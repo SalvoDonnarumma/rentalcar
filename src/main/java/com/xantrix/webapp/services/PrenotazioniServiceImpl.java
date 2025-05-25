@@ -161,4 +161,13 @@ public class PrenotazioniServiceImpl implements PrenotazioniService {
 
         return !dataPrenotazione.isAfter(dataOdierna.plusDays(2));
     }
+
+    public boolean IsPrenotazioneFromThePast(Integer id){
+        PrenotazioneDto prenotazione = SelById(id);
+        java.util.Date dataP = prenotazione.getDataFine();
+        LocalDate dataPrenotazione = ConvertDateToLocalDate(dataP);
+        LocalDate dataOdierna = LocalDate.now();
+
+        return dataPrenotazione.isBefore(dataOdierna.minusDays(1));
+    }
 }

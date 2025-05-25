@@ -27,13 +27,11 @@ public class CustomUtenteDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Utente non trovato");
         }
 
-        UserDetails userDetails = new User(
+        return new User(
                 utente.getEmail(),
                 utente.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_" + utente.getRuolo().toUpperCase()))
         );
-
-        return userDetails;
     }
 
 }

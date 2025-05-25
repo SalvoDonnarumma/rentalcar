@@ -35,7 +35,6 @@ import java.io.IOException;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-
     @Autowired
     @Qualifier("customUtenteDetailsService")
     private UserDetailsService userDetailsService;
@@ -108,7 +107,6 @@ public class SecurityConfiguration {
 
     private AuthenticationFailureHandler authenticationFailureHandler() {
         return (request, response, exception) -> {
-            System.out.println(">>> Autenticazione fallita: " + exception.getMessage());
             new SimpleUrlAuthenticationFailureHandler("/login/form?error").onAuthenticationFailure(request, response, exception);
         };
     }

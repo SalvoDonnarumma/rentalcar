@@ -13,12 +13,6 @@ public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
             throws AuthenticationException {
 
         String presentedPassword = authentication.getCredentials().toString();
-        System.out.println("Password inserita: " + presentedPassword);
-        System.out.println("Password hash DB: " + userDetails.getPassword());
-        System.out.println("Password inserita quando viene hashata: " + getPasswordEncoder().encode(presentedPassword));
-        System.out.println("Match? " + getPasswordEncoder().matches(presentedPassword, userDetails.getPassword()));
-
-
         if (!getPasswordEncoder().matches(presentedPassword, userDetails.getPassword())) {
             throw new BadCredentialsException("Password non valida");
         }

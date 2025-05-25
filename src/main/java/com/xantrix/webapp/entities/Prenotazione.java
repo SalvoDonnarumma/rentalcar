@@ -35,7 +35,6 @@ public class Prenotazione {
     @Column(name = "stato")
     private String stato;
 
-    // Prenotazione.java
     @Override
     public String toString() {
         return "Prenotazione{" +

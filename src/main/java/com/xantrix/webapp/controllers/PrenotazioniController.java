@@ -18,9 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/prenotazioni")
@@ -206,7 +204,12 @@ public class PrenotazioniController {
 
     @GetMapping("/elimina/{id}")
     public String eliminaPrenotazione(@PathVariable("id") Integer id, Model model, RedirectAttributes redirectAttributes) {
-        if(prenotazioniService.IsPrenotazioneInvalid(id))
+
+        if(prenotazioniService.IsPrenotazioneFromThePast(id)) { //Se è una prenotazione passata
+            prenotazioniService.EliminaPrenotazione(id);
+            return "redirect:/homepage/customerhomepage/parametri;paging=0,0?selected=10&errorDate=false&confirmDelete=true";
+        }
+        else if( prenotazioniService.IsPrenotazioneInvalid(id) ) //Se è una prenotazione non scaduta
             return "redirect:/homepage/customerhomepage/parametri;paging=0,0?selected=10&errorDate=true&confirmDelete=false";
 
         prenotazioniService.EliminaPrenotazione(id);
